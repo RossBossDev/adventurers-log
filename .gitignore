@@ -1,0 +1,12 @@
+node_modules
+.pnpm-store
+.env
+.env.*
+!.env.example
+dist
+coverage
+.next
+playwright-report
+test-results
+apps/docs/src/.vitepress/dist
+.DS_Store

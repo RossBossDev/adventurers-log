@@ -1,0 +1,36 @@
+{
+  "name": "adventurers-log",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.8.0",
+  "engines": {
+    "node": ">=24.17.0",
+    "pnpm": ">=11.8.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter backend start:dev",
+    "dev:web": "pnpm --filter web dev",
+    "dev:docs": "pnpm --filter docs dev",
+    "build": "pnpm --filter backend build && pnpm --filter web build && pnpm --filter docs build",
+    "test": "pnpm --filter backend test",
+    "test:e2e": "playwright test",
+    "check": "biome check .",
+    "check:fix": "biome check --write .",
+    "db:migrate": "pnpm --filter backend db:migrate",
+    "db:migrate:down": "pnpm --filter backend db:migrate:down",
+    "db:migrate:list": "pnpm --filter backend db:migrate:list",
+    "db:types": "pnpm --filter backend db:types",
+    "docs:dev": "pnpm --filter docs dev",
+    "docs:build": "pnpm --filter docs build",
+    "docs:preview": "pnpm --filter docs preview",
+    "prepare": "lefthook install"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.0",
+    "@playwright/test": "^1.61.0",
+    "concurrently": "^10.0.3",
+    "lefthook": "^2.1.9",
+    "vitepress": "^1.6.4",
+    "wait-on": "^9.0.10"
+  }
+}

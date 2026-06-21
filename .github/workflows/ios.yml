@@ -1,0 +1,24 @@
+name: iOS CI
+
+on:
+  workflow_dispatch:
+# on:
+#   pull_request:
+#   push:
+#     branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: [self-hosted, macOS]
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Show Xcode version
+        run: xcodebuild -version
+      - name: Build
+        run: |
+          xcodebuild \
+            -project apps/ios/AdventurersLog/AdventurersLog.xcodeproj \
+            -scheme AdventurersLog \
+            -destination 'platform=iOS Simulator,name=iPhone 17' \
+            build
