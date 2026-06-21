@@ -1,0 +1,14 @@
+.git
+node_modules
+**/node_modules
+.next
+**/.next
+coverage
+**/coverage
+dist
+**/dist
+test-results
+.env
+.env.*
+!.env.example
+.DS_Store

@@ -55,7 +55,7 @@ pnpm dev:web   # Next.js frontend
 pnpm docs:dev  # VitePress docs
 ```
 
-Backend health: <http://localhost:3000/health>
+Backend health: <http://localhost:3000/api/health>
 
 Dev-only Swagger docs: <http://localhost:3000/docs>
 
@@ -68,13 +68,32 @@ pnpm test
 pnpm test:e2e
 ```
 
-`pnpm test:e2e` starts the backend and frontend, then verifies the Next.js app renders and can query `GET /health`.
+`pnpm test:e2e` starts the backend and frontend, then verifies the Next.js app renders and can query `GET /api/health`.
 
-## Docker build
+## Production Docker image
+
+The root `Dockerfile` builds the Nest backend and Next.js frontend into one image. Nest serves API routes under `/api` and renders Next.js for all other routes.
 
 ```bash
-docker build -f apps/backend/Dockerfile -t adventurers-log-backend .
+docker build -t adventurers-log .
 ```
+
+For local production testing, start Postgres/Valkey first and expose the app port:
+
+```bash
+docker compose up -d
+
+docker run --rm \
+  -p 3000:3000 \
+  -e DATABASE_URL=postgres://postgres:postgres@host.docker.internal:5432/app \
+  -e REDIS_URL=redis://host.docker.internal:6379 \
+  -e LOG_LEVEL=debug \
+  adventurers-log
+```
+
+Web app: <http://localhost:3000>
+
+Backend health: <http://localhost:3000/api/health>
 
 ## iOS
 

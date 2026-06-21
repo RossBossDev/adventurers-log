@@ -8,10 +8,9 @@ export function ApiHealth() {
   const [state, setState] = useState<HealthState>("loading");
 
   useEffect(() => {
-    const apiBaseUrl =
-      process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000";
+    const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
-    fetch(`${apiBaseUrl}/health`)
+    fetch(`${apiBaseUrl}/api/health`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Health check failed with ${response.status}`);

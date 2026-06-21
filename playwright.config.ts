@@ -15,7 +15,7 @@ export default defineConfig({
   webServer: [
     {
       command: `PORT=${apiPort} pnpm --filter backend start`,
-      url: `${apiBaseUrl}/health`,
+      url: `${apiBaseUrl}/api/health`,
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
     },
