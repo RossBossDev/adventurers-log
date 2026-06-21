@@ -16,6 +16,7 @@ COPY apps/docs/package.json apps/docs/package.json
 RUN pnpm install --frozen-lockfile --ignore-scripts \
   && pnpm rebuild esbuild sharp msgpackr-extract unrs-resolver
 COPY . .
+RUN mkdir -p apps/web/public
 RUN pnpm --filter backend build
 RUN pnpm --filter web build
 
