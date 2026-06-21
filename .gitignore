@@ -10,3 +10,4 @@ playwright-report
 test-results
 apps/docs/src/.vitepress/dist
 .DS_Store
+apps/docs/src/.vitepress/cache
