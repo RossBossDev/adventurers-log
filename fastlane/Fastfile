@@ -32,7 +32,6 @@ platform :ios do
       scheme: "AdventurersLog",
       configuration: "Release",
       export_method: "app-store",
-      xcargs: "CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=W3673HWBNU PROVISIONING_PROFILE_SPECIFIER='#{provisioning_profile}'",
       export_options: {
         signingStyle: "manual",
         provisioningProfiles: {
