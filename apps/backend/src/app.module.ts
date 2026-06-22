@@ -1,4 +1,6 @@
 import { Module } from "@nestjs/common";
+import { AuthModule } from "@thallesp/nestjs-better-auth";
+import { authModuleAsyncConfig } from "./auth/auth.config";
 import { ConfigModule } from "./config/config.module";
 import { DatabaseModule } from "./database/database.module";
 import { HealthModule } from "./health/health.module";
@@ -10,6 +12,7 @@ import { QueueModule } from "./queue/queue.module";
     ConfigModule,
     LoggerModule,
     DatabaseModule,
+    AuthModule.forRootAsync(authModuleAsyncConfig),
     QueueModule,
     HealthModule,
   ],
