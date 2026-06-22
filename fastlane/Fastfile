@@ -25,14 +25,19 @@ platform :ios do
       skip_info_plist: true
     )
 
+    provisioning_profile = "OSRS Log"
+
     build_app(
       project: "apps/ios/AdventurersLog/AdventurersLog.xcodeproj",
       scheme: "AdventurersLog",
       configuration: "Release",
       export_method: "app-store",
-      xcargs: "-allowProvisioningUpdates CODE_SIGN_STYLE=Automatic DEVELOPMENT_TEAM=W3673HWBNU",
+      xcargs: "CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=W3673HWBNU PROVISIONING_PROFILE_SPECIFIER='#{provisioning_profile}'",
       export_options: {
-        signingStyle: "automatic"
+        signingStyle: "manual",
+        provisioningProfiles: {
+          app_identifier => provisioning_profile
+        }
       }
     )
 
