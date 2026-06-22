@@ -25,7 +25,7 @@ platform :ios do
       skip_info_plist: true
     )
 
-    provisioning_profile = "OSRS Log"
+    provisioning_profile = "OSRS Log App Store"
 
     build_app(
       project: "apps/ios/AdventurersLog/AdventurersLog.xcodeproj",
