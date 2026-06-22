@@ -25,19 +25,14 @@ platform :ios do
       skip_info_plist: true
     )
 
-    provisioning_profile = "AdventurersLog App Store"
-
     build_app(
       project: "apps/ios/AdventurersLog/AdventurersLog.xcodeproj",
       scheme: "AdventurersLog",
       configuration: "Release",
       export_method: "app-store",
-      xcargs: "CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=W3673HWBNU PROVISIONING_PROFILE_SPECIFIER='#{provisioning_profile}'",
+      xcargs: "-allowProvisioningUpdates CODE_SIGN_STYLE=Automatic DEVELOPMENT_TEAM=W3673HWBNU",
       export_options: {
-        signingStyle: "manual",
-        provisioningProfiles: {
-          app_identifier => provisioning_profile
-        }
+        signingStyle: "automatic"
       }
     )
 
