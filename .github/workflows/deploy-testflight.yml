@@ -1,0 +1,68 @@
+name: Deploy to TestFlight
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Upload beta build
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 60
+    environment: non-prod
+
+    env:
+      APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+      APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+      APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+      MACOS_KEYCHAIN_PASSWORD: ${{ secrets.MACOS_KEYCHAIN_PASSWORD }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Debug runner environment
+        run: |
+          echo "HOME=$HOME"
+          echo "USER=$USER"
+          echo "PATH=$PATH"
+          ls -la /Users/ross/.rbenv/bin || true
+          ls -la /Users/ross/.rbenv/shims || true
+          which rbenv || true
+          which ruby
+          ruby -v
+
+      - name: Setup Ruby
+        run: |
+          export PATH="/Users/ross/.rbenv/bin:/Users/ross/.rbenv/shims:$PATH"
+          eval "$(/Users/ross/.rbenv/bin/rbenv init - zsh)"
+
+          which ruby
+          ruby -v
+          which gem
+          bundle -v
+
+      - name: Install gems
+        run: |
+          export PATH="/Users/ross/.rbenv/bin:/Users/ross/.rbenv/shims:$PATH"
+          eval "$(/Users/ross/.rbenv/bin/rbenv init - zsh)"
+          bundle install
+
+      - name: Unlock keychain for codesigning
+        run: |
+          security default-keychain -s "$HOME/Library/Keychains/login.keychain-db"
+          security unlock-keychain -p "$MACOS_KEYCHAIN_PASSWORD" "$HOME/Library/Keychains/login.keychain-db"
+          security set-keychain-settings -lut 21600 "$HOME/Library/Keychains/login.keychain-db"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$MACOS_KEYCHAIN_PASSWORD" "$HOME/Library/Keychains/login.keychain-db"
+          security find-identity -v -p codesigning
+
+      - name: Upload to TestFlight
+        run: |
+          export PATH="/Users/ross/.rbenv/bin:/Users/ross/.rbenv/shims:$PATH"
+          eval "$(/Users/ross/.rbenv/bin/rbenv init - zsh)"
+          bundle exec fastlane ios beta
