@@ -27,7 +27,6 @@ jobs:
         ports:
           - 6379:6379
     env:
-      NODE_ENV: development
       PORT: 3000
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/app
       LOG_LEVEL: debug
