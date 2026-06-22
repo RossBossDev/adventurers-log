@@ -2,6 +2,7 @@ import { plainToInstance, Type } from "class-transformer";
 import {
   IsIn,
   IsNumber,
+  IsOptional,
   IsString,
   Max,
   Min,
@@ -16,6 +17,19 @@ export interface AppConfig {
   DATABASE_URL: string;
   LOG_LEVEL: string;
   REDIS_URL: string;
+  BETTER_AUTH_SECRET: string;
+  BETTER_AUTH_URL: string;
+  BETTER_AUTH_TRUSTED_ORIGINS: string;
+  AUTH_EMAIL_FROM: string;
+  RESEND_API_KEY?: string;
+  GOOGLE_CLIENT_ID?: string;
+  GOOGLE_IOS_CLIENT_ID?: string;
+  GOOGLE_CLIENT_SECRET?: string;
+  APPLE_CLIENT_ID?: string;
+  APPLE_TEAM_ID?: string;
+  APPLE_KEY_ID?: string;
+  APPLE_PRIVATE_KEY_BASE64?: string;
+  APPLE_APP_BUNDLE_IDENTIFIER?: string;
 }
 
 class EnvironmentVariables implements AppConfig {
@@ -36,6 +50,55 @@ class EnvironmentVariables implements AppConfig {
 
   @IsString()
   REDIS_URL!: string;
+
+  @IsString()
+  BETTER_AUTH_SECRET = "local-dev-better-auth-secret-change-me";
+
+  @IsString()
+  BETTER_AUTH_URL = "http://localhost:3000";
+
+  @IsString()
+  BETTER_AUTH_TRUSTED_ORIGINS =
+    "https://osrs-log.rossboss.dev,http://localhost:3000,http://localhost:3001";
+
+  @IsString()
+  AUTH_EMAIL_FROM = "Adventurers' Log <auth@rossboss.dev>";
+
+  @IsOptional()
+  @IsString()
+  RESEND_API_KEY?: string;
+
+  @IsOptional()
+  @IsString()
+  GOOGLE_CLIENT_ID?: string;
+
+  @IsOptional()
+  @IsString()
+  GOOGLE_IOS_CLIENT_ID?: string;
+
+  @IsOptional()
+  @IsString()
+  GOOGLE_CLIENT_SECRET?: string;
+
+  @IsOptional()
+  @IsString()
+  APPLE_CLIENT_ID?: string;
+
+  @IsOptional()
+  @IsString()
+  APPLE_TEAM_ID?: string;
+
+  @IsOptional()
+  @IsString()
+  APPLE_KEY_ID?: string;
+
+  @IsOptional()
+  @IsString()
+  APPLE_PRIVATE_KEY_BASE64?: string;
+
+  @IsOptional()
+  @IsString()
+  APPLE_APP_BUNDLE_IDENTIFIER?: string;
 }
 
 export function validate(config: Record<string, unknown>): AppConfig {
@@ -48,6 +111,14 @@ export function validate(config: Record<string, unknown>): AppConfig {
   });
   if (errors.length > 0) {
     throw new Error(errors.toString());
+  }
+
+  if (
+    validatedConfig.NODE_ENV === "production" &&
+    validatedConfig.BETTER_AUTH_SECRET ===
+      "local-dev-better-auth-secret-change-me"
+  ) {
+    throw new Error("BETTER_AUTH_SECRET must be set in production.");
   }
 
   return validatedConfig;

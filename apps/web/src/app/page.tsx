@@ -1,4 +1,5 @@
 import { ApiHealth } from "./api-health";
+import { AuthSmokeTest } from "./auth-smoke-test";
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
           </p>
         </div>
         <ApiHealth />
+        <AuthSmokeTest />
       </section>
     </main>
   );
