@@ -13,14 +13,14 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { z } from "zod";
 
-import { findOrCreateTrackedPlayer } from "../src/api/players";
+import { findOrCreateTrackedPlayer } from "../api/players";
 import {
   type LocalTrackedPlayer,
   listTrackedPlayers,
   removeTrackedPlayer,
   upsertTrackedPlayer,
-} from "../src/db/tracked-players.repository";
-import { useTrackedPlayerStore } from "../src/store/tracked-player.store";
+} from "../db/tracked-players.repository";
+import { useTrackedPlayerStore } from "../store/tracked-player.store";
 
 const trackedPlayersQueryKey = ["tracked-players"] as const;
 
@@ -106,7 +106,7 @@ export default function HomeScreen() {
                 Enter a player name to validate it with the backend and keep it
                 on this device.
               </Text>
-              <Text style={styles.subtitle}>
+              <Text className="text-sm text-red-500">
                 {process.env.EXPO_PUBLIC_API_BASE_URL}
               </Text>
             </View>
