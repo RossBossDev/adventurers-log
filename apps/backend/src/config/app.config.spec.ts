@@ -23,6 +23,8 @@ describe("app config", () => {
         "https://osrs-log.rossboss.dev,http://localhost:3000,http://localhost:3001",
       AUTH_EMAIL_FROM: "Adventurers' Log <auth@rossboss.dev>",
       WIKISYNC_BASE_URL: "https://api.wikisync.net",
+      TEMPLEOSRS_BASE_URL: "https://templeosrs.com",
+      OSRS_WIKI_PRICES_BASE_URL: "https://prices.runescape.wiki",
     });
   });
 

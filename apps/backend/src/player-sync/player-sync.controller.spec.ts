@@ -6,22 +6,34 @@ import { PlayerSyncController } from "./player-sync.controller";
 import type { PlayerSyncService } from "./player-sync.service";
 
 describe("PlayerSyncController", () => {
-  it("returns queued sync metadata", async () => {
+  it("returns queued sync metadata for all player sync jobs", async () => {
     const queued = {
       trackedPlayerId: "tracked-player-1",
-      source: "wikisync" as const,
-      jobId: "wikisync-tracked-player-1",
       status: "queued" as const,
+      jobs: [
+        {
+          trackedPlayerId: "tracked-player-1",
+          source: "wikisync" as const,
+          jobId: "wikisync-tracked-player-1",
+          status: "queued" as const,
+        },
+        {
+          trackedPlayerId: "tracked-player-1",
+          source: "templeosrs_collection_log" as const,
+          jobId: "templeosrs_collection_log-tracked-player-1",
+          status: "queued" as const,
+        },
+      ],
     };
     const service = {
-      enqueueWikiSyncSnapshot: jest.fn().mockResolvedValue(queued),
-    } as Pick<PlayerSyncService, "enqueueWikiSyncSnapshot">;
+      enqueueAllPlayerSyncs: jest.fn().mockResolvedValue(queued),
+    } as Pick<PlayerSyncService, "enqueueAllPlayerSyncs">;
     const controller = new PlayerSyncController(service as PlayerSyncService);
 
     await expect(controller.enqueueSync("tracked-player-1")).resolves.toBe(
       queued,
     );
-    expect(service.enqueueWikiSyncSnapshot).toHaveBeenCalledWith(
+    expect(service.enqueueAllPlayerSyncs).toHaveBeenCalledWith(
       "tracked-player-1",
     );
   });

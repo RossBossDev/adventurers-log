@@ -46,6 +46,16 @@ export interface AppMetadata {
   value: Json;
 }
 
+export interface OsrsItems {
+  examine: string | null;
+  icon: string | null;
+  id: number;
+  members: boolean | null;
+  name: string;
+  raw_mapping: Json;
+  updated_at: Generated<Timestamp>;
+}
+
 export interface PlayerSnapshots {
   created_at: Generated<Timestamp>;
   fetched_at: Timestamp;
@@ -108,6 +118,7 @@ export interface Verification {
 export interface DB {
   account: Account;
   app_metadata: AppMetadata;
+  osrs_items: OsrsItems;
   player_snapshots: PlayerSnapshots;
   raw_player_snapshots: RawPlayerSnapshots;
   session: Session;

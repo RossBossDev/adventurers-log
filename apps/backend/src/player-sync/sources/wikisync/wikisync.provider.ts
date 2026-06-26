@@ -1,12 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import type { AppConfig } from "../config/app.config";
-import type { Json } from "../database/database.types";
+import type { AppConfig } from "../../../config/app.config";
+import type { Json } from "../../../database/database.types";
 import {
   type PlayerSnapshotProvider,
   type ProviderPlayerSnapshotResult,
   WIKISYNC_SOURCE,
-} from "./player-sync.types";
+} from "../../player-sync.types";
 
 export class WikiSyncProviderError extends Error {
   constructor(message: string) {

@@ -31,6 +31,8 @@ export interface AppConfig {
   APPLE_PRIVATE_KEY_BASE64?: string;
   APPLE_APP_BUNDLE_IDENTIFIER?: string;
   WIKISYNC_BASE_URL: string;
+  TEMPLEOSRS_BASE_URL: string;
+  OSRS_WIKI_PRICES_BASE_URL: string;
 }
 
 class EnvironmentVariables implements AppConfig {
@@ -103,6 +105,12 @@ class EnvironmentVariables implements AppConfig {
 
   @IsString()
   WIKISYNC_BASE_URL = "https://api.wikisync.net";
+
+  @IsString()
+  TEMPLEOSRS_BASE_URL = "https://templeosrs.com";
+
+  @IsString()
+  OSRS_WIKI_PRICES_BASE_URL = "https://prices.runescape.wiki";
 }
 
 export function validate(config: Record<string, unknown>): AppConfig {
