@@ -1,26 +1,56 @@
 import {
-  type NormalizedCollectionLogSnapshot,
-  TEMPLEOSRS_COLLECTION_LOG_SOURCE,
+  type NormalizedTempleOsrsSnapshot,
+  TEMPLEOSRS_SOURCE,
 } from "../../player-sync.types";
 
-export class InvalidTempleOsrsCollectionLogError extends Error {
+export class InvalidTempleOsrsSnapshotError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "InvalidTempleOsrsCollectionLogError";
+    this.name = "InvalidTempleOsrsSnapshotError";
   }
 }
 
-export function normalizeTempleOsrsCollectionLogSnapshot(
+interface TempleOsrsPayload {
+  data: {
+    player: string;
+    player_name_with_capitalization: string | null;
+    game_mode: number;
+    last_checked: string;
+    last_changed: string;
+    items: Record<
+      string,
+      {
+        count: number;
+        item_date: number | null;
+        missing_hours: number;
+      }
+    >;
+    socials: [
+      {
+        link: string;
+        icon: string;
+      },
+    ];
+    killcounts: Record<
+      string,
+      {
+        kc: number;
+      }
+    >;
+  };
+}
+
+export function normalizeTempleOsrsSnapshot(
   payload: unknown,
-): NormalizedCollectionLogSnapshot {
+): NormalizedTempleOsrsSnapshot {
   const root = readRecord(payload, "response");
   const data = readRecord(root.data, "data");
   const itemsPayload = readRecord(data.items, "data.items");
-  const items: NormalizedCollectionLogSnapshot["items"] = {};
+  const items: NormalizedTempleOsrsSnapshot["items"] = {};
 
   for (const [itemId, itemPayload] of Object.entries(itemsPayload)) {
     if (!/^\d+$/.test(itemId)) {
-      throw new InvalidTempleOsrsCollectionLogError(
+      throw new InvalidTempleOsrsSnapshotError(
         `TempleOSRS item id must be numeric: ${itemId}.`,
       );
     }
@@ -40,8 +70,18 @@ export function normalizeTempleOsrsCollectionLogSnapshot(
     };
   }
 
+  const killcountsPayload = readRecord(data.killcounts, "data.killcounts");
+  const killcounts: NormalizedTempleOsrsSnapshot["killcounts"] = {};
+
+  for (const [boss, killcountPayload] of Object.entries(killcountsPayload)) {
+    const killcount = readRecord(killcountPayload, `data.killcounts.${boss}`);
+    killcounts[boss] = {
+      kc: readNumber(killcount.kc, `data.killcounts.${boss}.kc`),
+    };
+  }
+
   return {
-    source: TEMPLEOSRS_COLLECTION_LOG_SOURCE,
+    source: TEMPLEOSRS_SOURCE,
     username: readString(data.player, "data.player"),
     playerNameWithCapitalization: readNullableString(
       data.player_name_with_capitalization,
@@ -51,12 +91,13 @@ export function normalizeTempleOsrsCollectionLogSnapshot(
     lastChecked: readString(data.last_checked, "data.last_checked"),
     lastChanged: readString(data.last_changed, "data.last_changed"),
     items,
+    killcounts,
   };
 }
 
 function readString(value: unknown, path: string): string {
   if (typeof value !== "string" || value.length === 0) {
-    throw new InvalidTempleOsrsCollectionLogError(
+    throw new InvalidTempleOsrsSnapshotError(
       `TempleOSRS ${path} must be a string.`,
     );
   }
@@ -74,7 +115,7 @@ function readNullableString(value: unknown, path: string): string | null {
 
 function readNumber(value: unknown, path: string): number {
   if (typeof value !== "number" || !Number.isFinite(value)) {
-    throw new InvalidTempleOsrsCollectionLogError(
+    throw new InvalidTempleOsrsSnapshotError(
       `TempleOSRS ${path} must be a number.`,
     );
   }
@@ -100,7 +141,7 @@ function readOptionalNumber(value: unknown, path: string): number | undefined {
 
 function readRecord(value: unknown, path: string): Record<string, unknown> {
   if (typeof value !== "object" || value === null || Array.isArray(value)) {
-    throw new InvalidTempleOsrsCollectionLogError(
+    throw new InvalidTempleOsrsSnapshotError(
       `TempleOSRS ${path} must be an object.`,
     );
   }

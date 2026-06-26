@@ -1,5 +1,5 @@
 import {
-  canonicalUpdateFromTempleOsrsCollectionLogSnapshot,
+  canonicalUpdateFromTempleOsrsSnapshot,
   canonicalUpdateFromWikiSyncSnapshot,
 } from "./canonical-player-snapshot.adapters";
 
@@ -22,8 +22,8 @@ describe("canonical player snapshot adapters", () => {
 
   it("maps TempleOSRS item counts above zero to unlocked canonical items", () => {
     expect(
-      canonicalUpdateFromTempleOsrsCollectionLogSnapshot({
-        source: "templeosrs_collection_log",
+      canonicalUpdateFromTempleOsrsSnapshot({
+        source: "templeosrs",
         username: "Techdad69",
         playerNameWithCapitalization: null,
         gameMode: 0,
@@ -33,10 +33,17 @@ describe("canonical player snapshot adapters", () => {
           "13262": { count: 0, itemDate: null },
           "4151": { count: 2, itemDate: 1782439126 },
         },
+        killcounts: {
+          kraken: { kc: 150 },
+          zulrah: { kc: 0 },
+        },
       }),
     ).toEqual({
       itemsUnlocked: {
         "4151": { id: 4151, acquiredAt: "2026-06-26T01:58:46.000Z" },
+      },
+      bosses: {
+        kraken: { count: 150 },
       },
     });
   });

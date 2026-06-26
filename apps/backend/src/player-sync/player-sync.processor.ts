@@ -1,14 +1,14 @@
 import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Inject, Injectable, Logger, type OnModuleInit } from "@nestjs/common";
 import type { Job } from "bullmq";
-import { CollectionLogSyncService } from "./collection-log-sync.service";
 import { HiscoreSyncService } from "./hiscore-sync.service";
 import {
   PLAYER_SYNC_QUEUE,
   type SyncPlayerSourcesJob,
-  TEMPLEOSRS_COLLECTION_LOG_SOURCE,
+  TEMPLEOSRS_SOURCE,
   WIKISYNC_SOURCE,
 } from "./player-sync.types";
+import { TempleOsrsSyncService } from "./templeosrs-sync.service";
 
 @Injectable()
 @Processor(PLAYER_SYNC_QUEUE)
@@ -18,8 +18,8 @@ export class PlayerSyncProcessor extends WorkerHost implements OnModuleInit {
   constructor(
     @Inject(HiscoreSyncService)
     private readonly hiscoreSync: HiscoreSyncService,
-    @Inject(CollectionLogSyncService)
-    private readonly collectionLogSync: CollectionLogSyncService,
+    @Inject(TempleOsrsSyncService)
+    private readonly templeOsrsSync: TempleOsrsSyncService,
   ) {
     super();
   }
@@ -51,10 +51,8 @@ export class PlayerSyncProcessor extends WorkerHost implements OnModuleInit {
     await this.syncSource(job, WIKISYNC_SOURCE, () =>
       this.hiscoreSync.syncWikiSyncSnapshot(job.data.trackedPlayerId),
     );
-    await this.syncSource(job, TEMPLEOSRS_COLLECTION_LOG_SOURCE, () =>
-      this.collectionLogSync.syncTempleOsrsCollectionLog(
-        job.data.trackedPlayerId,
-      ),
+    await this.syncSource(job, TEMPLEOSRS_SOURCE, () =>
+      this.templeOsrsSync.syncTempleOsrsSnapshot(job.data.trackedPlayerId),
     );
 
     this.logger.log(

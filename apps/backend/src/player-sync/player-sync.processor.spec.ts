@@ -1,20 +1,20 @@
 import type { Job } from "bullmq";
-import type { CollectionLogSyncService } from "./collection-log-sync.service";
 import type { HiscoreSyncService } from "./hiscore-sync.service";
 import { PlayerSyncProcessor } from "./player-sync.processor";
 import type { SyncPlayerSourcesJob } from "./player-sync.types";
+import type { TempleOsrsSyncService } from "./templeosrs-sync.service";
 
 describe("PlayerSyncProcessor", () => {
   it("continues to later sources when an earlier source fails", async () => {
     const hiscoreSync = {
       syncWikiSyncSnapshot: jest.fn().mockRejectedValue(new Error("Wiki down")),
     } as Pick<HiscoreSyncService, "syncWikiSyncSnapshot">;
-    const collectionLogSync = {
-      syncTempleOsrsCollectionLog: jest.fn().mockResolvedValue(undefined),
-    } as Pick<CollectionLogSyncService, "syncTempleOsrsCollectionLog">;
+    const templeOsrsSync = {
+      syncTempleOsrsSnapshot: jest.fn().mockResolvedValue(undefined),
+    } as Pick<TempleOsrsSyncService, "syncTempleOsrsSnapshot">;
     const processor = new PlayerSyncProcessor(
       hiscoreSync as HiscoreSyncService,
-      collectionLogSync as CollectionLogSyncService,
+      templeOsrsSync as TempleOsrsSyncService,
     );
 
     const logger = (
@@ -35,7 +35,7 @@ describe("PlayerSyncProcessor", () => {
     expect(hiscoreSync.syncWikiSyncSnapshot).toHaveBeenCalledWith(
       "tracked-player-1",
     );
-    expect(collectionLogSync.syncTempleOsrsCollectionLog).toHaveBeenCalledWith(
+    expect(templeOsrsSync.syncTempleOsrsSnapshot).toHaveBeenCalledWith(
       "tracked-player-1",
     );
     expect(logger.error).toHaveBeenCalledWith(

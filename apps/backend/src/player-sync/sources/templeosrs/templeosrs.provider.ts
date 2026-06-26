@@ -3,9 +3,9 @@ import { ConfigService } from "@nestjs/config";
 import type { AppConfig } from "../../../config/app.config";
 import type { Json } from "../../../database/database.types";
 import {
-  type CollectionLogProvider,
-  type ProviderCollectionLogResult,
-  TEMPLEOSRS_COLLECTION_LOG_SOURCE,
+  type ProviderTempleOsrsResult,
+  TEMPLEOSRS_SOURCE,
+  type TempleOsrsSnapshotProvider,
 } from "../../player-sync.types";
 
 export class TempleOsrsProviderError extends Error {
@@ -16,17 +16,15 @@ export class TempleOsrsProviderError extends Error {
 }
 
 @Injectable()
-export class TempleOsrsProvider implements CollectionLogProvider {
-  readonly source = TEMPLEOSRS_COLLECTION_LOG_SOURCE;
+export class TempleOsrsProvider implements TempleOsrsSnapshotProvider {
+  readonly source = TEMPLEOSRS_SOURCE;
 
   constructor(
     @Inject(ConfigService)
     private readonly configService: ConfigService<AppConfig, true>,
   ) {}
 
-  async fetchCollectionLog(
-    username: string,
-  ): Promise<ProviderCollectionLogResult> {
+  async fetchSnapshot(username: string): Promise<ProviderTempleOsrsResult> {
     const url = new URL(
       "/api/collection-log/player_collections.php",
       this.configService.get("TEMPLEOSRS_BASE_URL", { infer: true }),
@@ -47,12 +45,12 @@ export class TempleOsrsProvider implements CollectionLogProvider {
     const data = readData(rawPayload);
 
     return {
-      source: TEMPLEOSRS_COLLECTION_LOG_SOURCE,
+      source: TEMPLEOSRS_SOURCE,
       sourceUsername: readSourceUsername(data, username),
       fetchedAt: readFetchedAt(data),
       httpStatus: response.status,
       rawPayload: rawPayload as Json,
-      collectionPayload: rawPayload,
+      snapshotPayload: rawPayload,
     };
   }
 }

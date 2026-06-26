@@ -1,6 +1,6 @@
 import type {
-  NormalizedCollectionLogSnapshot,
   NormalizedPlayerSnapshot,
+  NormalizedTempleOsrsSnapshot,
 } from "../player-sync.types";
 import type {
   CanonicalPlayerSnapshotUpdate,
@@ -24,8 +24,8 @@ export function canonicalUpdateFromWikiSyncSnapshot(
   };
 }
 
-export function canonicalUpdateFromTempleOsrsCollectionLogSnapshot(
-  snapshot: NormalizedCollectionLogSnapshot,
+export function canonicalUpdateFromTempleOsrsSnapshot(
+  snapshot: NormalizedTempleOsrsSnapshot,
 ): CanonicalPlayerSnapshotUpdate {
   const itemsUnlocked: CanonicalPlayerSnapshotUpdate["itemsUnlocked"] = {};
 
@@ -43,5 +43,15 @@ export function canonicalUpdateFromTempleOsrsCollectionLogSnapshot(
     };
   }
 
-  return { itemsUnlocked };
+  const bosses: CanonicalPlayerSnapshotUpdate["bosses"] = {};
+
+  for (const [boss, killcount] of Object.entries(snapshot.killcounts)) {
+    if (killcount.kc <= 0) {
+      continue;
+    }
+
+    bosses[boss] = { count: killcount.kc };
+  }
+
+  return { itemsUnlocked, bosses };
 }

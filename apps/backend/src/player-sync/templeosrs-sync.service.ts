@@ -1,14 +1,14 @@
 import { Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { TrackedPlayersService } from "../tracked-players/tracked-players.service";
-import { canonicalUpdateFromTempleOsrsCollectionLogSnapshot } from "./canonical/canonical-player-snapshot.adapters";
+import { canonicalUpdateFromTempleOsrsSnapshot } from "./canonical/canonical-player-snapshot.adapters";
 import { OsrsItemCacheService } from "./items/osrs-item-cache.service";
 import { PlayerSnapshotStoreService } from "./player-snapshot-store.service";
 import { TempleOsrsProvider } from "./sources/templeosrs/templeosrs.provider";
-import { normalizeTempleOsrsCollectionLogSnapshot } from "./sources/templeosrs/templeosrs-collection-log.mapper";
+import { normalizeTempleOsrsSnapshot } from "./sources/templeosrs/templeosrs-snapshot.mapper";
 
 @Injectable()
-export class CollectionLogSyncService {
-  private readonly logger = new Logger(CollectionLogSyncService.name);
+export class TempleOsrsSyncService {
+  private readonly logger = new Logger(TempleOsrsSyncService.name);
 
   constructor(
     @Inject(TrackedPlayersService)
@@ -21,7 +21,7 @@ export class CollectionLogSyncService {
     private readonly snapshotStore: PlayerSnapshotStoreService,
   ) {}
 
-  async syncTempleOsrsCollectionLog(trackedPlayerId: string): Promise<void> {
+  async syncTempleOsrsSnapshot(trackedPlayerId: string): Promise<void> {
     const trackedPlayer = await this.trackedPlayers.findById(trackedPlayerId);
 
     if (!trackedPlayer) {
@@ -30,15 +30,15 @@ export class CollectionLogSyncService {
 
     await this.osrsItemCache.refreshIfStale();
 
-    const providerResult = await this.templeOsrsProvider.fetchCollectionLog(
+    const providerResult = await this.templeOsrsProvider.fetchSnapshot(
       trackedPlayer.normalized_username,
     );
     this.logger.log(
       `Fetched ${providerResult.source} snapshot for ${providerResult.sourceUsername}.`,
     );
 
-    const normalized = normalizeTempleOsrsCollectionLogSnapshot(
-      providerResult.collectionPayload,
+    const normalized = normalizeTempleOsrsSnapshot(
+      providerResult.snapshotPayload,
     );
 
     await this.snapshotStore.storeSnapshot(
@@ -51,7 +51,7 @@ export class CollectionLogSyncService {
         cached: null,
         rawPayload: providerResult.rawPayload,
       },
-      canonicalUpdateFromTempleOsrsCollectionLogSnapshot(normalized),
+      canonicalUpdateFromTempleOsrsSnapshot(normalized),
     );
   }
 }
