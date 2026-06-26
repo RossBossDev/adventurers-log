@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
-import type { Json } from "../database/database.types";
 import { TrackedPlayersService } from "../tracked-players/tracked-players.service";
+import { canonicalUpdateFromWikiSyncSnapshot } from "./canonical/canonical-player-snapshot.adapters";
 import { PlayerSnapshotStoreService } from "./player-snapshot-store.service";
 import { WikiSyncProvider } from "./sources/wikisync/wikisync.provider";
 import { normalizeWikiSyncPlayerSnapshot } from "./sources/wikisync/wikisync-snapshot.mapper";
@@ -46,7 +46,7 @@ export class HiscoreSyncService {
         cached: providerResult.cached,
         rawPayload: providerResult.rawPayload,
       },
-      normalized as Json,
+      canonicalUpdateFromWikiSyncSnapshot(normalized),
     );
   }
 }

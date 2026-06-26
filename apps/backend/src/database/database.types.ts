@@ -66,6 +66,23 @@ export interface PlayerSnapshots {
   tracked_player_id: string;
 }
 
+export interface ProgressEvents {
+  created_at: Generated<Timestamp>;
+  current_player_snapshot_id: string;
+  event_type: string;
+  from_value: number | null;
+  id: Generated<string>;
+  idempotency_key: string;
+  metadata: Generated<Json>;
+  milestone_value: number | null;
+  occurred_at: Timestamp;
+  previous_player_snapshot_id: string | null;
+  subject_key: string;
+  subject_type: string;
+  to_value: number;
+  tracked_player_id: string;
+}
+
 export interface RawPlayerSnapshots {
   cached: boolean | null;
   created_at: Generated<Timestamp>;
@@ -120,6 +137,7 @@ export interface DB {
   app_metadata: AppMetadata;
   osrs_items: OsrsItems;
   player_snapshots: PlayerSnapshots;
+  progress_events: ProgressEvents;
   raw_player_snapshots: RawPlayerSnapshots;
   session: Session;
   tracked_players: TrackedPlayers;

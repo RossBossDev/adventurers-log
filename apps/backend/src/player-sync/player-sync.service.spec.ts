@@ -2,23 +2,18 @@ import { NotFoundException } from "@nestjs/common";
 import type { Queue } from "bullmq";
 import type { TrackedPlayersService } from "../tracked-players/tracked-players.service";
 import { PlayerSyncService } from "./player-sync.service";
-import type { SyncPlayerSnapshotJob } from "./player-sync.types";
+import type { SyncPlayerSourcesJob } from "./player-sync.types";
 
 describe("PlayerSyncService", () => {
-  it("enqueues all player sync jobs", async () => {
+  it("enqueues one sequential all-source player sync job", async () => {
     const queue = {
-      add: jest
-        .fn()
-        .mockResolvedValueOnce({ id: "wikisync-tracked-player-1" })
-        .mockResolvedValueOnce({
-          id: "templeosrs_collection_log-tracked-player-1",
-        }),
-    } as Pick<Queue<SyncPlayerSnapshotJob>, "add">;
+      add: jest.fn().mockResolvedValueOnce({ id: "all-tracked-player-1" }),
+    } as Pick<Queue<SyncPlayerSourcesJob>, "add">;
     const trackedPlayers = {
       findById: jest.fn().mockResolvedValue({ id: "tracked-player-1" }),
     } as Pick<TrackedPlayersService, "findById">;
     const service = new PlayerSyncService(
-      queue as Queue<SyncPlayerSnapshotJob>,
+      queue as Queue<SyncPlayerSourcesJob>,
       trackedPlayers as TrackedPlayersService,
     );
 
@@ -30,52 +25,34 @@ describe("PlayerSyncService", () => {
       jobs: [
         {
           trackedPlayerId: "tracked-player-1",
-          source: "wikisync",
-          jobId: "wikisync-tracked-player-1",
-          status: "queued",
-        },
-        {
-          trackedPlayerId: "tracked-player-1",
-          source: "templeosrs_collection_log",
-          jobId: "templeosrs_collection_log-tracked-player-1",
+          source: "all",
+          jobId: "all-tracked-player-1",
           status: "queued",
         },
       ],
     });
     expect(queue.add).toHaveBeenCalledWith(
-      "sync-player-snapshot",
-      { trackedPlayerId: "tracked-player-1", source: "wikisync" },
+      "sync-player-sources",
+      { trackedPlayerId: "tracked-player-1" },
       expect.objectContaining({
-        jobId: expect.stringMatching(/^wikisync-tracked-player-1-\d+$/),
+        jobId: expect.stringMatching(/^all-tracked-player-1-\d+$/),
         attempts: 3,
       }),
     );
-    expect(queue.add).toHaveBeenCalledWith(
-      "sync-player-snapshot",
-      {
-        trackedPlayerId: "tracked-player-1",
-        source: "templeosrs_collection_log",
-      },
-      expect.objectContaining({
-        jobId: expect.stringMatching(
-          /^templeosrs_collection_log-tracked-player-1-\d+$/,
-        ),
-        attempts: 3,
-      }),
-    );
+    expect(queue.add).toHaveBeenCalledTimes(1);
     expect(trackedPlayers.findById).toHaveBeenCalledTimes(1);
   });
 
   it("rejects missing tracked players", async () => {
     const queue = { add: jest.fn() } as Pick<
-      Queue<SyncPlayerSnapshotJob>,
+      Queue<SyncPlayerSourcesJob>,
       "add"
     >;
     const trackedPlayers = {
       findById: jest.fn().mockResolvedValue(undefined),
     } as Pick<TrackedPlayersService, "findById">;
     const service = new PlayerSyncService(
-      queue as Queue<SyncPlayerSnapshotJob>,
+      queue as Queue<SyncPlayerSourcesJob>,
       trackedPlayers as TrackedPlayersService,
     );
 

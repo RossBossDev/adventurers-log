@@ -1,7 +1,8 @@
 import type { Json } from "../database/database.types";
 
 export const PLAYER_SYNC_QUEUE = "player-sync";
-export const SYNC_PLAYER_SNAPSHOT_JOB = "sync-player-snapshot";
+export const SYNC_PLAYER_SOURCES_JOB = "sync-player-sources";
+export const ALL_PLAYER_SYNC_SOURCES = "all" as const;
 export const WIKISYNC_SOURCE = "wikisync" as const;
 export const TEMPLEOSRS_COLLECTION_LOG_SOURCE =
   "templeosrs_collection_log" as const;
@@ -10,14 +11,13 @@ export type IngestionSource =
   | typeof WIKISYNC_SOURCE
   | typeof TEMPLEOSRS_COLLECTION_LOG_SOURCE;
 
-export type SyncPlayerSnapshotJob = {
+export type SyncPlayerSourcesJob = {
   trackedPlayerId: string;
-  source: IngestionSource;
 };
 
 export type QueuedPlayerSync = {
   trackedPlayerId: string;
-  source: IngestionSource;
+  source: typeof ALL_PLAYER_SYNC_SOURCES;
   jobId: string;
   status: "queued";
 };

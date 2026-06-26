@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
-import type { Json } from "../database/database.types";
 import { TrackedPlayersService } from "../tracked-players/tracked-players.service";
+import { canonicalUpdateFromTempleOsrsCollectionLogSnapshot } from "./canonical/canonical-player-snapshot.adapters";
 import { OsrsItemCacheService } from "./items/osrs-item-cache.service";
 import { PlayerSnapshotStoreService } from "./player-snapshot-store.service";
 import { TempleOsrsProvider } from "./sources/templeosrs/templeosrs.provider";
@@ -51,7 +51,7 @@ export class CollectionLogSyncService {
         cached: null,
         rawPayload: providerResult.rawPayload,
       },
-      normalized as Json,
+      canonicalUpdateFromTempleOsrsCollectionLogSnapshot(normalized),
     );
   }
 }
