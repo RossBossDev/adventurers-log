@@ -35,10 +35,6 @@ jobs:
       - name: Install JS dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install CocoaPods
-        working-directory: apps/mobile/ios
-        run: pod install
-
       - name: Show Xcode version
         run: xcodebuild -version
 
@@ -68,6 +64,14 @@ jobs:
           export PATH="/Users/ross/.rbenv/bin:/Users/ross/.rbenv/shims:$PATH"
           eval "$(/Users/ross/.rbenv/bin/rbenv init - zsh)"
           bundle install
+          gem install cocoapods --no-document
+
+      - name: Install CocoaPods
+        working-directory: apps/mobile/ios
+        run: |
+          export PATH="/Users/ross/.rbenv/bin:/Users/ross/.rbenv/shims:$PATH"
+          eval "$(/Users/ross/.rbenv/bin/rbenv init - zsh)"
+          pod install
 
       - name: Unlock keychain for codesigning
         run: |
