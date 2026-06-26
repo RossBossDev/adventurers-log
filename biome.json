@@ -13,7 +13,8 @@
       "!dist",
       "!.next",
       "!apps/docs/src/.vitepress/dist",
-      "!apps/ios",
+      "!apps/mobile/.expo",
+      "!apps/mobile/ios",
       "!apps/web/public",
       "!apps/backend/eslint.config.mjs"
     ]
