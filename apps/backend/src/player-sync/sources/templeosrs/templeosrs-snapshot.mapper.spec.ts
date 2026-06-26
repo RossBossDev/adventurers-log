@@ -1,7 +1,7 @@
 import {
-  InvalidTempleOsrsCollectionLogError,
-  normalizeTempleOsrsCollectionLogSnapshot,
-} from "./templeosrs-collection-log.mapper";
+  InvalidTempleOsrsSnapshotError,
+  normalizeTempleOsrsSnapshot,
+} from "./templeosrs-snapshot.mapper";
 
 const payload = {
   data: {
@@ -14,13 +14,17 @@ const payload = {
       "13262": { count: 0, item_date: null, missing_hours: 37.7111 },
       "4151": { count: 2, item_date: 1782439126, hours: 0 },
     },
+    killcounts: {
+      kraken: { kc: 150 },
+      zulrah: { kc: 0 },
+    },
   },
 };
 
-describe("normalizeTempleOsrsCollectionLogSnapshot", () => {
-  it("maps TempleOSRS collection-log metadata and item counts", () => {
-    expect(normalizeTempleOsrsCollectionLogSnapshot(payload)).toEqual({
-      source: "templeosrs_collection_log",
+describe("normalizeTempleOsrsSnapshot", () => {
+  it("maps TempleOSRS snapshot metadata, items, and killcounts", () => {
+    expect(normalizeTempleOsrsSnapshot(payload)).toEqual({
+      source: "templeosrs",
       username: "Techdad69",
       playerNameWithCapitalization: null,
       gameMode: 0,
@@ -30,14 +34,18 @@ describe("normalizeTempleOsrsCollectionLogSnapshot", () => {
         "13262": { count: 0, itemDate: null, missingHours: 37.7111 },
         "4151": { count: 2, itemDate: 1782439126, hours: 0 },
       },
+      killcounts: {
+        kraken: { kc: 150 },
+        zulrah: { kc: 0 },
+      },
     });
   });
 
   it("rejects malformed item entries", () => {
     expect(() =>
-      normalizeTempleOsrsCollectionLogSnapshot({
+      normalizeTempleOsrsSnapshot({
         data: { ...payload.data, items: { abc: { count: 1 } } },
       }),
-    ).toThrow(InvalidTempleOsrsCollectionLogError);
+    ).toThrow(InvalidTempleOsrsSnapshotError);
   });
 });

@@ -19,7 +19,7 @@ describe("TempleOsrsProvider", () => {
     global.fetch = fetchMock;
   });
 
-  it("fetches and returns TempleOSRS collection-log payload metadata", async () => {
+  it("fetches and returns TempleOSRS snapshot payload metadata", async () => {
     const payload = {
       data: {
         player: "Techdad69",
@@ -33,15 +33,13 @@ describe("TempleOsrsProvider", () => {
       json: async () => payload,
     });
 
-    await expect(
-      createProvider().fetchCollectionLog("techdad69"),
-    ).resolves.toEqual({
-      source: "templeosrs_collection_log",
+    await expect(createProvider().fetchSnapshot("techdad69")).resolves.toEqual({
+      source: "templeosrs",
       sourceUsername: "Techdad69",
       fetchedAt: new Date("2026-06-26 01:58:46 UTC"),
       httpStatus: 200,
       rawPayload: payload,
-      collectionPayload: payload,
+      snapshotPayload: payload,
     });
     expect(String(fetchMock.mock.calls[0][0])).toBe(
       "https://templeosrs.com/api/collection-log/player_collections.php?player=techdad69",
@@ -58,9 +56,9 @@ describe("TempleOsrsProvider", () => {
       json: async () => ({}),
     });
 
-    await expect(
-      createProvider().fetchCollectionLog("missing"),
-    ).rejects.toThrow(TempleOsrsProviderError);
+    await expect(createProvider().fetchSnapshot("missing")).rejects.toThrow(
+      TempleOsrsProviderError,
+    );
   });
 
   it("rejects malformed responses", async () => {
@@ -70,8 +68,8 @@ describe("TempleOsrsProvider", () => {
       json: async () => ({ data: {} }),
     });
 
-    await expect(
-      createProvider().fetchCollectionLog("missing"),
-    ).rejects.toThrow("TempleOSRS response did not include items.");
+    await expect(createProvider().fetchSnapshot("missing")).rejects.toThrow(
+      "TempleOSRS response did not include items.",
+    );
   });
 });

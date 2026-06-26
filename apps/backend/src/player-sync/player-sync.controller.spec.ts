@@ -6,21 +6,15 @@ import { PlayerSyncController } from "./player-sync.controller";
 import type { PlayerSyncService } from "./player-sync.service";
 
 describe("PlayerSyncController", () => {
-  it("returns queued sync metadata for all player sync jobs", async () => {
+  it("returns queued sync metadata for the all-source player sync job", async () => {
     const queued = {
       trackedPlayerId: "tracked-player-1",
       status: "queued" as const,
       jobs: [
         {
           trackedPlayerId: "tracked-player-1",
-          source: "wikisync" as const,
-          jobId: "wikisync-tracked-player-1",
-          status: "queued" as const,
-        },
-        {
-          trackedPlayerId: "tracked-player-1",
-          source: "templeosrs_collection_log" as const,
-          jobId: "templeosrs_collection_log-tracked-player-1",
+          source: "all" as const,
+          jobId: "all-tracked-player-1",
           status: "queued" as const,
         },
       ],
