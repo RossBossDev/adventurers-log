@@ -3,7 +3,7 @@ import {
   type RankedActivity,
   type RankedSkill,
   WIKISYNC_SOURCE,
-} from "./player-sync.types";
+} from "../../player-sync.types";
 
 export class InvalidWikiSyncSnapshotError extends Error {
   constructor(message: string) {

@@ -1,5 +1,5 @@
 import type { ConfigService } from "@nestjs/config";
-import type { AppConfig } from "../config/app.config";
+import type { AppConfig } from "../../../config/app.config";
 import { WikiSyncProvider, WikiSyncProviderError } from "./wikisync.provider";
 
 const fetchMock = jest.fn<

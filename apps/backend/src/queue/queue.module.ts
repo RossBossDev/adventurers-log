@@ -10,6 +10,7 @@ import type { AppConfig } from "../config/app.config";
       useFactory: (configService: ConfigService<AppConfig, true>) => ({
         connection: {
           url: configService.get("REDIS_URL", { infer: true }),
+          maxRetriesPerRequest: null,
         },
       }),
     }),

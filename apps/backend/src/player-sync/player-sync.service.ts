@@ -5,8 +5,10 @@ import { TrackedPlayersService } from "../tracked-players/tracked-players.servic
 import {
   PLAYER_SYNC_QUEUE,
   type QueuedPlayerSync,
+  type QueuedPlayerSyncBatch,
   SYNC_PLAYER_SNAPSHOT_JOB,
   type SyncPlayerSnapshotJob,
+  TEMPLEOSRS_COLLECTION_LOG_SOURCE,
   WIKISYNC_SOURCE,
 } from "./player-sync.types";
 
@@ -21,23 +23,42 @@ export class PlayerSyncService {
     private readonly trackedPlayers: TrackedPlayersService,
   ) {}
 
-  async enqueueWikiSyncSnapshot(
+  async enqueueAllPlayerSyncs(
     trackedPlayerId: string,
-  ): Promise<QueuedPlayerSync> {
+  ): Promise<QueuedPlayerSyncBatch> {
     const trackedPlayer = await this.trackedPlayers.findById(trackedPlayerId);
 
     if (!trackedPlayer) {
       throw new NotFoundException("Tracked player not found.");
     }
 
-    const jobId = `${WIKISYNC_SOURCE}-${trackedPlayer.id}`;
+    const sources: SyncPlayerSnapshotJob["source"][] = [
+      WIKISYNC_SOURCE,
+      TEMPLEOSRS_COLLECTION_LOG_SOURCE,
+    ];
+    const jobs = await Promise.all(
+      sources.map((source) => this.enqueueSnapshot(trackedPlayer.id, source)),
+    );
+
+    return {
+      trackedPlayerId: trackedPlayer.id,
+      status: "queued",
+      jobs,
+    };
+  }
+
+  private async enqueueSnapshot(
+    trackedPlayerId: string,
+    source: SyncPlayerSnapshotJob["source"],
+  ): Promise<QueuedPlayerSync> {
+    const jobId = `${source}-${trackedPlayerId}-${Date.now()}`;
     this.logger.log(
-      `Queueing ${WIKISYNC_SOURCE} sync for tracked player ${trackedPlayer.id}.`,
+      `Queueing ${source} sync for tracked player ${trackedPlayerId}.`,
     );
 
     const job = await this.playerSyncQueue.add(
       SYNC_PLAYER_SNAPSHOT_JOB,
-      { trackedPlayerId: trackedPlayer.id, source: WIKISYNC_SOURCE },
+      { trackedPlayerId, source },
       {
         jobId,
         attempts: 3,
@@ -48,12 +69,12 @@ export class PlayerSyncService {
     );
 
     this.logger.log(
-      `Queued ${WIKISYNC_SOURCE} sync job ${job.id ?? jobId} for tracked player ${trackedPlayer.id}.`,
+      `Queued ${source} sync job ${job.id ?? jobId} for tracked player ${trackedPlayerId}.`,
     );
 
     return {
-      trackedPlayerId: trackedPlayer.id,
-      source: WIKISYNC_SOURCE,
+      trackedPlayerId,
+      source,
       jobId: job.id ?? jobId,
       status: "queued",
     };

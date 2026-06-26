@@ -1,0 +1,57 @@
+import { Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
+import type { Json } from "../database/database.types";
+import { TrackedPlayersService } from "../tracked-players/tracked-players.service";
+import { OsrsItemCacheService } from "./items/osrs-item-cache.service";
+import { PlayerSnapshotStoreService } from "./player-snapshot-store.service";
+import { TempleOsrsProvider } from "./sources/templeosrs/templeosrs.provider";
+import { normalizeTempleOsrsCollectionLogSnapshot } from "./sources/templeosrs/templeosrs-collection-log.mapper";
+
+@Injectable()
+export class CollectionLogSyncService {
+  private readonly logger = new Logger(CollectionLogSyncService.name);
+
+  constructor(
+    @Inject(TrackedPlayersService)
+    private readonly trackedPlayers: TrackedPlayersService,
+    @Inject(TempleOsrsProvider)
+    private readonly templeOsrsProvider: TempleOsrsProvider,
+    @Inject(OsrsItemCacheService)
+    private readonly osrsItemCache: OsrsItemCacheService,
+    @Inject(PlayerSnapshotStoreService)
+    private readonly snapshotStore: PlayerSnapshotStoreService,
+  ) {}
+
+  async syncTempleOsrsCollectionLog(trackedPlayerId: string): Promise<void> {
+    const trackedPlayer = await this.trackedPlayers.findById(trackedPlayerId);
+
+    if (!trackedPlayer) {
+      throw new NotFoundException("Tracked player not found.");
+    }
+
+    await this.osrsItemCache.refreshIfStale();
+
+    const providerResult = await this.templeOsrsProvider.fetchCollectionLog(
+      trackedPlayer.normalized_username,
+    );
+    this.logger.log(
+      `Fetched ${providerResult.source} snapshot for ${providerResult.sourceUsername}.`,
+    );
+
+    const normalized = normalizeTempleOsrsCollectionLogSnapshot(
+      providerResult.collectionPayload,
+    );
+
+    await this.snapshotStore.storeSnapshot(
+      {
+        trackedPlayerId: trackedPlayer.id,
+        source: providerResult.source,
+        sourceUsername: providerResult.sourceUsername,
+        fetchedAt: providerResult.fetchedAt,
+        httpStatus: providerResult.httpStatus,
+        cached: null,
+        rawPayload: providerResult.rawPayload,
+      },
+      normalized as Json,
+    );
+  }
+}
