@@ -6,6 +6,7 @@ import { DatabaseModule } from "./database/database.module";
 import { HealthModule } from "./health/health.module";
 import { LoggerModule } from "./logger/logger.module";
 import { QueueModule } from "./queue/queue.module";
+import { TrackedPlayersModule } from "./tracked-players/tracked-players.module";
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { QueueModule } from "./queue/queue.module";
     AuthModule.forRootAsync(authModuleAsyncConfig),
     QueueModule,
     HealthModule,
+    TrackedPlayersModule,
   ],
 })
 export class AppModule {}

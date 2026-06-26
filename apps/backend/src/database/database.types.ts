@@ -57,6 +57,13 @@ export interface Session {
   userId: string;
 }
 
+export interface TrackedPlayers {
+  created_at: Generated<Timestamp>;
+  id: Generated<string>;
+  normalized_username: string;
+  updated_at: Generated<Timestamp>;
+}
+
 export interface User {
   createdAt: Generated<Timestamp>;
   email: string;
@@ -80,6 +87,7 @@ export interface DB {
   account: Account;
   app_metadata: AppMetadata;
   session: Session;
+  tracked_players: TrackedPlayers;
   user: User;
   verification: Verification;
 }
