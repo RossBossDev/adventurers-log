@@ -20,7 +20,7 @@ platform :ios do
     )
 
     increment_build_number(
-      xcodeproj: "apps/ios/AdventurersLog/AdventurersLog.xcodeproj",
+      xcodeproj: "apps/mobile/ios/AdventurersLog.xcodeproj",
       build_number: latest_build_number + 1,
       skip_info_plist: true
     )
@@ -28,9 +28,10 @@ platform :ios do
     provisioning_profile = "OSRS Log App Store"
 
     build_app(
-      project: "apps/ios/AdventurersLog/AdventurersLog.xcodeproj",
+      workspace: "apps/mobile/ios/AdventurersLog.xcworkspace",
       scheme: "AdventurersLog",
       configuration: "Release",
+      # xcargs: "DEVELOPMENT_TEAM=W3673HWBNU CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER='#{provisioning_profile}'",
       export_method: "app-store",
       export_options: {
         signingStyle: "manual",
