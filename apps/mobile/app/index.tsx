@@ -95,6 +95,7 @@ export default function HomeScreen() {
       <FlatList
         contentContainerStyle={styles.listContent}
         data={trackedPlayersQuery.data ?? []}
+        keyboardShouldPersistTaps="handled"
         keyExtractor={(item) => item.id.toString()}
         ListHeaderComponent={
           <View style={styles.headerStack}>
@@ -105,7 +106,9 @@ export default function HomeScreen() {
                 Enter a player name to validate it with the backend and keep it
                 on this device.
               </Text>
-              <Text>{process.env.EXPO_PUBLIC_API_BASE_URL}</Text>
+              <Text style={styles.subtitle}>
+                {process.env.EXPO_PUBLIC_API_BASE_URL}
+              </Text>
             </View>
 
             <View style={styles.card}>
