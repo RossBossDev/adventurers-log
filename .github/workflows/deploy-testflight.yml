@@ -69,7 +69,7 @@ jobs:
           gem install cocoapods --no-document
 
       - name: Install CocoaPods
-        working-directory: apps/mobile/ios
+        working-directory: apps/mobile2/ios
         run: |
           export PATH="/Users/ross/.rbenv/bin:/Users/ross/.rbenv/shims:$PATH"
           eval "$(/Users/ross/.rbenv/bin/rbenv init - zsh)"
