@@ -33,7 +33,7 @@ platform :ios do
       workspace: "apps/mobile/ios/AdventurersLog.xcworkspace",
       scheme: "AdventurersLog",
       configuration: "Release",
-      xcargs: "CURRENT_PROJECT_VERSION=#{build_number} DEVELOPMENT_TEAM=W3673HWBNU CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER='#{provisioning_profile}'",
+      xcargs: "CURRENT_PROJECT_VERSION=#{build_number}",
       export_method: "app-store",
       export_options: {
         signingStyle: "manual",
