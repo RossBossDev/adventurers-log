@@ -46,6 +46,28 @@ export interface AppMetadata {
   value: Json;
 }
 
+export interface PlayerSnapshots {
+  created_at: Generated<Timestamp>;
+  fetched_at: Timestamp;
+  id: Generated<string>;
+  normalized: Json;
+  raw_player_snapshot_id: string;
+  source: string;
+  tracked_player_id: string;
+}
+
+export interface RawPlayerSnapshots {
+  cached: boolean | null;
+  created_at: Generated<Timestamp>;
+  fetched_at: Timestamp;
+  http_status: number | null;
+  id: Generated<string>;
+  raw_payload: Json;
+  source: string;
+  source_username: string;
+  tracked_player_id: string;
+}
+
 export interface Session {
   createdAt: Generated<Timestamp>;
   expiresAt: Timestamp;
@@ -86,6 +108,8 @@ export interface Verification {
 export interface DB {
   account: Account;
   app_metadata: AppMetadata;
+  player_snapshots: PlayerSnapshots;
+  raw_player_snapshots: RawPlayerSnapshots;
   session: Session;
   tracked_players: TrackedPlayers;
   user: User;

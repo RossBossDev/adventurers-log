@@ -13,6 +13,14 @@ export type TrackedPlayer = Selectable<TrackedPlayers>;
 export class TrackedPlayersService {
   constructor(@Inject(KYSELY_DB) private readonly db: Kysely<DB>) {}
 
+  async findById(id: string): Promise<TrackedPlayer | undefined> {
+    return this.db
+      .selectFrom("tracked_players")
+      .selectAll()
+      .where("id", "=", id)
+      .executeTakeFirst();
+  }
+
   async findOrCreateByUsername(username: string): Promise<TrackedPlayer> {
     const normalizedUsername = normalizeOsrsUsername(username);
 

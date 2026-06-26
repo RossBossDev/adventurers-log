@@ -30,6 +30,7 @@ export interface AppConfig {
   APPLE_KEY_ID?: string;
   APPLE_PRIVATE_KEY_BASE64?: string;
   APPLE_APP_BUNDLE_IDENTIFIER?: string;
+  WIKISYNC_BASE_URL: string;
 }
 
 class EnvironmentVariables implements AppConfig {
@@ -99,6 +100,9 @@ class EnvironmentVariables implements AppConfig {
   @IsOptional()
   @IsString()
   APPLE_APP_BUNDLE_IDENTIFIER?: string;
+
+  @IsString()
+  WIKISYNC_BASE_URL = "https://api.wikisync.net";
 }
 
 export function validate(config: Record<string, unknown>): AppConfig {

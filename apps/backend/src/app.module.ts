@@ -5,6 +5,7 @@ import { ConfigModule } from "./config/config.module";
 import { DatabaseModule } from "./database/database.module";
 import { HealthModule } from "./health/health.module";
 import { LoggerModule } from "./logger/logger.module";
+import { PlayerSyncModule } from "./player-sync/player-sync.module";
 import { QueueModule } from "./queue/queue.module";
 import { TrackedPlayersModule } from "./tracked-players/tracked-players.module";
 
@@ -17,6 +18,7 @@ import { TrackedPlayersModule } from "./tracked-players/tracked-players.module";
     QueueModule,
     HealthModule,
     TrackedPlayersModule,
+    PlayerSyncModule,
   ],
 })
 export class AppModule {}

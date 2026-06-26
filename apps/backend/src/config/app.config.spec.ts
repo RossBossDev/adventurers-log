@@ -22,6 +22,7 @@ describe("app config", () => {
       BETTER_AUTH_TRUSTED_ORIGINS:
         "https://osrs-log.rossboss.dev,http://localhost:3000,http://localhost:3001",
       AUTH_EMAIL_FROM: "Adventurers' Log <auth@rossboss.dev>",
+      WIKISYNC_BASE_URL: "https://api.wikisync.net",
     });
   });
 
