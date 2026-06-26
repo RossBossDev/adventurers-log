@@ -53,16 +53,12 @@
       "indexes": {
         "tracked_players_backend_id_unique": {
           "name": "tracked_players_backend_id_unique",
-          "columns": [
-            "backend_id"
-          ],
+          "columns": ["backend_id"],
           "isUnique": true
         },
         "tracked_players_normalized_username_unique": {
           "name": "tracked_players_normalized_username_unique",
-          "columns": [
-            "normalized_username"
-          ],
+          "columns": ["normalized_username"],
           "isUnique": true
         }
       },

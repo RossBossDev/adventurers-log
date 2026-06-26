@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   FlatList,
   Pressable,
+  StyleSheet,
   Text,
   TextInput,
   View,
@@ -90,31 +91,26 @@ export default function HomeScreen() {
   });
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-950">
+    <SafeAreaView style={styles.screen}>
       <FlatList
-        contentContainerClassName="gap-4 px-5 py-8"
+        contentContainerStyle={styles.listContent}
         data={trackedPlayersQuery.data ?? []}
         keyExtractor={(item) => item.id.toString()}
         ListHeaderComponent={
-          <View className="gap-6">
-            <View className="gap-3">
-              <Text className="text-sm font-bold uppercase tracking-widest text-amber-400">
-                Adventurers&apos; Log
-              </Text>
-              <Text className="text-4xl font-extrabold text-slate-50">
-                Track an OSRS player
-              </Text>
-              <Text className="text-base leading-6 text-slate-300">
+          <View style={styles.headerStack}>
+            <View style={styles.titleStack}>
+              <Text style={styles.eyebrow}>Adventurers&apos; Log</Text>
+              <Text style={styles.title}>Track an OSRS player</Text>
+              <Text style={styles.subtitle}>
                 Enter a player name to validate it with the backend and keep it
                 on this device.
               </Text>
+              <Text>{process.env.EXPO_PUBLIC_API_BASE_URL}</Text>
             </View>
 
-            <View className="gap-4 rounded-3xl border border-slate-800 bg-slate-900 p-5">
-              <View className="gap-2">
-                <Text className="text-sm font-semibold text-slate-200">
-                  Player name
-                </Text>
+            <View style={styles.card}>
+              <View style={styles.fieldStack}>
+                <Text style={styles.label}>Player name</Text>
                 <Controller
                   control={form.control}
                   name="playerName"
@@ -122,7 +118,6 @@ export default function HomeScreen() {
                     <TextInput
                       autoCapitalize="none"
                       autoCorrect={false}
-                      className="rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-base text-slate-50"
                       editable={!addPlayerMutation.isPending}
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -130,44 +125,46 @@ export default function HomeScreen() {
                       placeholder="Zezima"
                       placeholderTextColor="#64748b"
                       returnKeyType="done"
+                      style={styles.input}
                       value={value}
                     />
                   )}
                 />
                 {form.formState.errors.playerName ? (
-                  <Text className="text-sm text-red-300">
+                  <Text style={styles.errorText}>
                     {form.formState.errors.playerName.message}
                   </Text>
                 ) : null}
                 {addPlayerMutation.error ? (
-                  <Text className="text-sm text-red-300">
+                  <Text style={styles.errorText}>
                     {addPlayerMutation.error.message}
                   </Text>
                 ) : null}
               </View>
 
               <Pressable
-                className="items-center rounded-2xl bg-amber-400 px-4 py-3 disabled:opacity-60"
                 disabled={addPlayerMutation.isPending}
                 onPress={onSubmit}
+                style={({ pressed }) => [
+                  styles.primaryButton,
+                  (pressed || addPlayerMutation.isPending) && styles.dimmed,
+                ]}
               >
-                <Text className="text-base font-bold text-slate-950">
+                <Text style={styles.primaryButtonText}>
                   {addPlayerMutation.isPending ? "Tracking…" : "Track player"}
                 </Text>
               </Pressable>
             </View>
 
-            <View className="flex-row items-center justify-between">
-              <Text className="text-xl font-bold text-slate-50">
-                Local tracked players
-              </Text>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Local tracked players</Text>
               {trackedPlayersQuery.isFetching ? (
                 <ActivityIndicator color="#fbbf24" />
               ) : null}
             </View>
 
             {trackedPlayersQuery.error ? (
-              <Text className="rounded-2xl bg-red-950 p-4 text-red-200">
+              <Text style={styles.errorBanner}>
                 {trackedPlayersQuery.error.message}
               </Text>
             ) : null}
@@ -175,11 +172,9 @@ export default function HomeScreen() {
         }
         ListEmptyComponent={
           trackedPlayersQuery.isLoading ? (
-            <Text className="rounded-2xl bg-slate-900 p-5 text-slate-300">
-              Loading tracked players…
-            </Text>
+            <Text style={styles.emptyCard}>Loading tracked players…</Text>
           ) : (
-            <Text className="rounded-2xl bg-slate-900 p-5 text-slate-300">
+            <Text style={styles.emptyCard}>
               No players tracked locally yet.
             </Text>
           )
@@ -211,29 +206,172 @@ function TrackedPlayerCard({
   onRemove,
 }: TrackedPlayerCardProps) {
   return (
-    <View className="gap-3 rounded-3xl border border-slate-800 bg-slate-900 p-5">
-      <View className="flex-row items-start justify-between gap-3">
-        <View className="flex-1 gap-1">
-          <Text className="text-lg font-bold text-slate-50">
-            {player.normalizedUsername}
-          </Text>
-          <Text className="text-sm text-slate-400">
-            Added as {player.displayName}
-          </Text>
-          {isActive ? (
-            <Text className="text-xs font-bold uppercase tracking-widest text-amber-300">
-              Last added
-            </Text>
-          ) : null}
+    <View style={styles.playerCard}>
+      <View style={styles.playerCardContent}>
+        <View style={styles.playerInfo}>
+          <Text style={styles.playerName}>{player.normalizedUsername}</Text>
+          <Text style={styles.playerMeta}>Added as {player.displayName}</Text>
+          {isActive ? <Text style={styles.activeBadge}>Last added</Text> : null}
         </View>
         <Pressable
-          className="rounded-xl border border-red-400 px-3 py-2 disabled:opacity-60"
           disabled={isRemoving}
           onPress={onRemove}
+          style={({ pressed }) => [
+            styles.removeButton,
+            (pressed || isRemoving) && styles.dimmed,
+          ]}
         >
-          <Text className="text-sm font-bold text-red-300">Remove</Text>
+          <Text style={styles.removeButtonText}>Remove</Text>
         </Pressable>
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: "#020617",
+  },
+  listContent: {
+    gap: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 32,
+  },
+  headerStack: {
+    gap: 24,
+  },
+  titleStack: {
+    gap: 12,
+  },
+  eyebrow: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#fbbf24",
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
+  title: {
+    fontSize: 36,
+    fontWeight: "800",
+    color: "#f8fafc",
+  },
+  subtitle: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#cbd5e1",
+  },
+  card: {
+    gap: 16,
+    borderWidth: 1,
+    borderColor: "#1e293b",
+    borderRadius: 24,
+    backgroundColor: "#0f172a",
+    padding: 20,
+  },
+  fieldStack: {
+    gap: 8,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#e2e8f0",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#334155",
+    borderRadius: 16,
+    backgroundColor: "#020617",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 16,
+    color: "#f8fafc",
+  },
+  errorText: {
+    fontSize: 14,
+    color: "#fca5a5",
+  },
+  primaryButton: {
+    alignItems: "center",
+    borderRadius: 16,
+    backgroundColor: "#fbbf24",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  primaryButtonText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#020617",
+  },
+  dimmed: {
+    opacity: 0.6,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#f8fafc",
+  },
+  errorBanner: {
+    borderRadius: 16,
+    backgroundColor: "#450a0a",
+    padding: 16,
+    color: "#fecaca",
+  },
+  emptyCard: {
+    borderRadius: 16,
+    backgroundColor: "#0f172a",
+    padding: 20,
+    color: "#cbd5e1",
+  },
+  playerCard: {
+    gap: 12,
+    borderWidth: 1,
+    borderColor: "#1e293b",
+    borderRadius: 24,
+    backgroundColor: "#0f172a",
+    padding: 20,
+  },
+  playerCardContent: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    gap: 12,
+  },
+  playerInfo: {
+    flex: 1,
+    gap: 4,
+  },
+  playerName: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#f8fafc",
+  },
+  playerMeta: {
+    fontSize: 14,
+    color: "#94a3b8",
+  },
+  activeBadge: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: "#fcd34d",
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+  },
+  removeButton: {
+    borderWidth: 1,
+    borderColor: "#f87171",
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  removeButtonText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#fca5a5",
+  },
+});
