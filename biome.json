@@ -14,6 +14,8 @@
       "!.next",
       "!apps/docs/src/.vitepress/dist",
       "!apps/mobile/.expo",
+      "!apps/mobile/drizzle/meta",
+      "!apps/mobile/global.css",
       "!apps/mobile/ios",
       "!apps/web/public",
       "!apps/backend/eslint.config.mjs"
