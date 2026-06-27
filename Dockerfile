@@ -9,12 +9,12 @@ WORKDIR /app
 
 FROM base AS builder
 ENV CI=true
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
-COPY apps/backend/package.json apps/backend/package.json
-COPY apps/web/package.json apps/web/package.json
-COPY apps/docs/package.json apps/docs/package.json
-RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
-    pnpm install --frozen-lockfile --ignore-scripts \
+COPY pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
+    pnpm fetch
+COPY package.json apps/backend/package.json apps/web/package.json apps/docs/package.json ./
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
+    pnpm install --frozen-lockfile --ignore-scripts --offline \
   && pnpm rebuild esbuild sharp msgpackr-extract unrs-resolver
 COPY . .
 RUN mkdir -p apps/web/public
@@ -28,12 +28,11 @@ ENV PORT=3000
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 nestjs
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
-COPY apps/backend/package.json apps/backend/package.json
-COPY apps/web/package.json apps/web/package.json
-COPY apps/docs/package.json apps/docs/package.json
-RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
-    pnpm install --frozen-lockfile --prod --ignore-scripts \
+COPY pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY package.json apps/backend/package.json apps/web/package.json apps/docs/package.json ./
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
+    pnpm fetch --prod \
+  && pnpm install --frozen-lockfile --prod --ignore-scripts --offline \
   && pnpm store prune
 
 COPY --from=builder --chown=nestjs:nodejs /app/apps/backend/dist apps/backend/dist
