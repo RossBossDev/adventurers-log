@@ -41,6 +41,7 @@ COPY --from=builder --chown=nestjs:nodejs /app/apps/web/.next apps/web/.next
 COPY --from=builder --chown=nestjs:nodejs /app/apps/web/public apps/web/public
 COPY --from=builder --chown=nestjs:nodejs /app/apps/backend/package.json apps/backend/package.json
 COPY --from=builder --chown=nestjs:nodejs /app/apps/web/package.json apps/web/package.json
+COPY --from=builder --chown=nestjs:nodejs /app/apps/backend/kysely.config.ts apps/backend/kysely.config.ts
 
 USER nestjs
 EXPOSE 3000
