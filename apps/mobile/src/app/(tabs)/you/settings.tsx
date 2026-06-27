@@ -7,10 +7,12 @@ import { Card } from "../../../components/ui/card";
 import { Screen } from "../../../components/ui/screen";
 import { Text } from "../../../components/ui/text";
 import { route } from "../../../lib/routes";
-import { useMockAuthStore } from "../../../store/mock-auth.store";
+import { useAuthSessionStore } from "../../../store/auth-session.store";
 
 export default function SettingsScreen() {
-  const signOut = useMockAuthStore((state) => state.signOut);
+  const user = useAuthSessionStore((state) => state.user);
+  const isWorking = useAuthSessionStore((state) => state.isWorking);
+  const signOut = useAuthSessionStore((state) => state.signOut);
 
   return (
     <AuthRequired featureName="Settings">
@@ -24,28 +26,28 @@ export default function SettingsScreen() {
         >
           <View className="gap-3">
             <Text className="text-al-card-light" variant="label">
-              Mock auth
+              Account
             </Text>
             <Text variant="display">Settings</Text>
             <Text variant="subtitle">
-              Reset the scaffold auth state and return to anonymous navigation.
+              Manage your Adventurers&apos; Log user session.
             </Text>
           </View>
 
           <Card className="gap-4">
-            <Text variant="title">Signed in as a scaffold user</Text>
-            <Text variant="body">
-              This is not Better Auth. It only unlocks placeholder screens for
-              manual navigation testing.
-            </Text>
+            <Text variant="title">Signed in</Text>
+            <View className="gap-1">
+              <Text variant="body">{user?.name || user?.email}</Text>
+              {user?.email ? <Text variant="muted">{user.email}</Text> : null}
+            </View>
             <Button
+              disabled={isWorking}
               onPress={() => {
-                signOut();
-                router.replace(route("/feed"));
+                void signOut().finally(() => router.replace(route("/feed")));
               }}
               variant="danger"
             >
-              Sign out / return to anonymous
+              Sign out
             </Button>
           </Card>
         </ScrollView>

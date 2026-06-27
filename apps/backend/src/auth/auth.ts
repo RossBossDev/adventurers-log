@@ -5,7 +5,7 @@ import {
   betterAuth,
   type SocialProviders,
 } from "better-auth";
-import { emailOTP } from "better-auth/plugins";
+import { bearer, emailOTP } from "better-auth/plugins";
 import { importPKCS8, SignJWT } from "jose";
 import type { Pool } from "pg";
 import type { AppConfig } from "../config/app.config";
@@ -101,6 +101,7 @@ export async function createAuthInstance(
     ),
     socialProviders,
     plugins: [
+      bearer(),
       emailOTP({
         otpLength: 6,
         expiresIn: 5 * 60,

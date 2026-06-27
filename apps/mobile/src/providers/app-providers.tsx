@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 
 import { Card } from "../components/ui/card";
@@ -8,6 +8,7 @@ import { Screen } from "../components/ui/screen";
 import { Text } from "../components/ui/text";
 import { db } from "../db/client";
 import migrations from "../db/migrations";
+import { useAuthSessionStore } from "../store/auth-session.store";
 import { useAppFonts } from "../theme/fonts";
 
 type AppProvidersProps = {
@@ -47,6 +48,27 @@ export function AppProviders({ children }: AppProvidersProps) {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthBootstrapper />
+      {children}
+    </QueryClientProvider>
   );
+}
+
+function AuthBootstrapper() {
+  const hasBootstrapped = useRef(false);
+  const bootstrapSession = useAuthSessionStore(
+    (state) => state.bootstrapSession,
+  );
+
+  useEffect(() => {
+    if (hasBootstrapped.current) {
+      return;
+    }
+
+    hasBootstrapped.current = true;
+    void bootstrapSession();
+  }, [bootstrapSession]);
+
+  return null;
 }

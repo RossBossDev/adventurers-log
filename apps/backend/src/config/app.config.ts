@@ -62,7 +62,7 @@ class EnvironmentVariables implements AppConfig {
 
   @IsString()
   BETTER_AUTH_TRUSTED_ORIGINS =
-    "https://osrs-log.rossboss.dev,http://localhost:3000,http://localhost:3001";
+    "https://osrs-log.rossboss.dev,adventurerslog://auth,http://localhost:3000,http://localhost:3001";
 
   @IsString()
   AUTH_EMAIL_FROM = "Adventurers' Log <auth@rossboss.dev>";
