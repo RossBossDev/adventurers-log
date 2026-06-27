@@ -13,8 +13,8 @@ export default function AuthMyAccountsScreen() {
           body: "My Accounts are unverified OSRS Accounts attached to an Adventurers' Log User. This is distinct from public followed accounts in the Feed.",
         },
         {
-          title: "Use mock auth",
-          body: "If you arrive here anonymously, use Sign In or Sign Up to enable the mock user before claiming accounts.",
+          title: "Sign in first",
+          body: "If you arrive here anonymously, use Sign In or Sign Up to create or resume your Adventurers' Log User before claiming accounts.",
         },
       ]}
       description="Placeholder route for adding a claimed OSRS Account during auth onboarding."

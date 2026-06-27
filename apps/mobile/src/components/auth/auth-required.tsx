@@ -1,12 +1,10 @@
-import { router } from "expo-router";
 import type { ReactNode } from "react";
 import { Text as NativeText, ScrollView, View } from "react-native";
 
-import { route } from "../../lib/routes";
-import { useMockAuthStore } from "../../store/mock-auth.store";
-import { Button } from "../ui/button";
+import { useAuthSessionStore } from "../../store/auth-session.store";
 import { Card } from "../ui/card";
 import { Screen } from "../ui/screen";
+import { AuthForm } from "./auth-form";
 
 type AuthRequiredProps = {
   children: ReactNode;
@@ -14,10 +12,33 @@ type AuthRequiredProps = {
 };
 
 export function AuthRequired({ children, featureName }: AuthRequiredProps) {
-  const isAuthenticated = useMockAuthStore((state) => state.isAuthenticated);
-  const viewAsLoggedInUser = useMockAuthStore(
-    (state) => state.viewAsLoggedInUser,
-  );
+  const isAuthenticated = useAuthSessionStore((state) => state.isAuthenticated);
+  const isLoading = useAuthSessionStore((state) => state.isLoading);
+
+  if (isLoading) {
+    return (
+      <Screen className="justify-center px-6">
+        <View style={{ gap: 12 }}>
+          <NativeText
+            style={{
+              color: "#f5ead2",
+              fontSize: 36,
+              fontWeight: "900",
+              lineHeight: 42,
+              textAlign: "center",
+            }}
+          >
+            Adventurers&apos; Log
+          </NativeText>
+          <NativeText
+            style={{ color: "#f5ead2", fontSize: 16, textAlign: "center" }}
+          >
+            Checking your session…
+          </NativeText>
+        </View>
+      </Screen>
+    );
+  }
 
   if (isAuthenticated) {
     return children;
@@ -75,21 +96,9 @@ export function AuthRequired({ children, featureName }: AuthRequiredProps) {
             You can follow OSRS Accounts from the Feed without signing in.
             Internal social features belong to Adventurers&apos; Log Users.
           </NativeText>
-          <View style={{ gap: 12 }}>
-            <Button onPress={() => router.push(route("/auth/sign-in"))}>
-              Sign in
-            </Button>
-            <Button
-              onPress={() => router.push(route("/auth/sign-up"))}
-              variant="outline"
-            >
-              Sign up
-            </Button>
-            <Button onPress={viewAsLoggedInUser} variant="ghost">
-              View as logged in user
-            </Button>
-          </View>
         </Card>
+
+        <AuthForm />
       </ScrollView>
     </Screen>
   );

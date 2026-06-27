@@ -8,7 +8,7 @@ import { Screen } from "../../../components/ui/screen";
 import { Text } from "../../../components/ui/text";
 import { listTrackedPlayers } from "../../../db/tracked-players.repository";
 import { route } from "../../../lib/routes";
-import { useMockAuthStore } from "../../../store/mock-auth.store";
+import { useAuthSessionStore } from "../../../store/auth-session.store";
 
 export const trackedAccountsQueryKey = ["tracked-players"] as const;
 
@@ -18,11 +18,9 @@ export default function FeedScreen() {
     queryFn: listTrackedPlayers,
   });
   const trackedAccounts = trackedAccountsQuery.data ?? [];
-  const isAuthenticated = useMockAuthStore((state) => state.isAuthenticated);
-  const signOut = useMockAuthStore((state) => state.signOut);
-  const viewAsLoggedInUser = useMockAuthStore(
-    (state) => state.viewAsLoggedInUser,
-  );
+  const isAuthenticated = useAuthSessionStore((state) => state.isAuthenticated);
+  const user = useAuthSessionStore((state) => state.user);
+  const signOut = useAuthSessionStore((state) => state.signOut);
 
   return (
     <Screen>
@@ -51,19 +49,25 @@ export default function FeedScreen() {
 
             <Card className="gap-3" variant="dark">
               <Text className="text-al-cream" variant="title">
-                Scaffold auth
+                Account
               </Text>
               <Text className="text-al-cream/85" variant="body">
-                Current state: {isAuthenticated ? "logged in" : "anonymous"}.
-                Toggle this to browse gated Goals, Friends, and You screens.
+                {isAuthenticated
+                  ? `Signed in as ${user?.email ?? "an Adventurers' Log user"}.`
+                  : "Sign in to unlock Goals, Friends, You, notifications, and social features."}
               </Text>
               <Button
-                onPress={isAuthenticated ? signOut : viewAsLoggedInUser}
+                onPress={() => {
+                  if (isAuthenticated) {
+                    void signOut();
+                    return;
+                  }
+
+                  router.push(route("/auth/sign-in"));
+                }}
                 variant={isAuthenticated ? "danger" : "outline"}
               >
-                {isAuthenticated
-                  ? "View as anonymous"
-                  : "View as logged in user"}
+                {isAuthenticated ? "Sign out" : "Sign in"}
               </Button>
             </Card>
 
