@@ -27,5 +27,10 @@ module.exports = {
       googleSignInPlugin,
       "expo-secure-store",
     ],
+    extra: {
+      eas: {
+        projectId: "fb302747-95e9-4627-a317-9d0a096a8f94",
+      },
+    },
   },
 };
