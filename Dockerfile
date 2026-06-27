@@ -13,7 +13,8 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY apps/backend/package.json apps/backend/package.json
 COPY apps/web/package.json apps/web/package.json
 COPY apps/docs/package.json apps/docs/package.json
-RUN pnpm install --frozen-lockfile --ignore-scripts \
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm install --frozen-lockfile --ignore-scripts \
   && pnpm rebuild esbuild sharp msgpackr-extract unrs-resolver
 COPY . .
 RUN mkdir -p apps/web/public
@@ -31,7 +32,8 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY apps/backend/package.json apps/backend/package.json
 COPY apps/web/package.json apps/web/package.json
 COPY apps/docs/package.json apps/docs/package.json
-RUN pnpm install --frozen-lockfile --prod --ignore-scripts \
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm install --frozen-lockfile --prod --ignore-scripts \
   && pnpm store prune
 
 COPY --from=builder --chown=nestjs:nodejs /app/apps/backend/dist apps/backend/dist

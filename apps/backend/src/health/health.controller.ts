@@ -4,9 +4,11 @@ import {
   type HealthCheckResult,
   HealthCheckService,
 } from "@nestjs/terminus";
+import { AllowAnonymous } from "@thallesp/nestjs-better-auth";
 import { DatabaseHealthIndicator } from "./database-health.indicator";
 
 @Controller("health")
+@AllowAnonymous()
 export class HealthController {
   constructor(
     @Inject(HealthCheckService) private readonly health: HealthCheckService,
