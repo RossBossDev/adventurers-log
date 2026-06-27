@@ -1,19 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ActivityIndicator, FlatList, View } from "react-native";
 import { z } from "zod";
 
 import { findOrCreateTrackedPlayer } from "../api/players";
+import { Badge } from "../components/ui/badge";
+import { Button } from "../components/ui/button";
+import { Card } from "../components/ui/card";
+import { Screen } from "../components/ui/screen";
+import { Text } from "../components/ui/text";
+import { TextField } from "../components/ui/text-field";
 import {
   type LocalTrackedPlayer,
   listTrackedPlayers,
@@ -91,34 +88,39 @@ export default function HomeScreen() {
   });
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <Screen>
       <FlatList
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={{
+          backgroundColor: "#14110d",
+          flexGrow: 1,
+          gap: 16,
+          paddingHorizontal: 20,
+          paddingVertical: 32,
+        }}
         data={trackedPlayersQuery.data ?? []}
         keyboardShouldPersistTaps="handled"
         keyExtractor={(item) => item.id.toString()}
         ListHeaderComponent={
-          <View style={styles.headerStack}>
-            <View style={styles.titleStack}>
-              <Text style={styles.eyebrow}>Adventurers&apos; Log</Text>
-              <Text style={styles.title}>Track an OSRS player</Text>
-              <Text style={styles.subtitle}>
-                Enter a player name to validate it with the backend and keep it
-                on this device.
+          <View className="gap-6">
+            <View className="gap-3">
+              <Text className="text-al-card-light" variant="label">
+                Adventurers&apos; Log
               </Text>
-              <Text className="text-sm text-red-500">
-                {process.env.EXPO_PUBLIC_API_BASE_URL}
+              <Text variant="display">Track an OSRS player</Text>
+              <Text variant="subtitle">
+                Start a local logbook entry by validating an adventurer with the
+                backend and saving it on this device.
               </Text>
             </View>
 
-            <View style={styles.card}>
-              <View style={styles.fieldStack}>
-                <Text style={styles.label}>Player name</Text>
+            <Card className="gap-4">
+              <View className="gap-2">
+                <Text variant="label">Player name</Text>
                 <Controller
                   control={form.control}
                   name="playerName"
                   render={({ field: { onBlur, onChange, value } }) => (
-                    <TextInput
+                    <TextField
                       autoCapitalize="none"
                       autoCorrect={false}
                       editable={!addPlayerMutation.isPending}
@@ -126,60 +128,53 @@ export default function HomeScreen() {
                       onChangeText={onChange}
                       onSubmitEditing={onSubmit}
                       placeholder="Zezima"
-                      placeholderTextColor="#64748b"
                       returnKeyType="done"
-                      style={styles.input}
                       value={value}
                     />
                   )}
                 />
                 {form.formState.errors.playerName ? (
-                  <Text style={styles.errorText}>
+                  <Text variant="error">
                     {form.formState.errors.playerName.message}
                   </Text>
                 ) : null}
                 {addPlayerMutation.error ? (
-                  <Text style={styles.errorText}>
-                    {addPlayerMutation.error.message}
-                  </Text>
+                  <Text variant="error">{addPlayerMutation.error.message}</Text>
                 ) : null}
               </View>
 
-              <Pressable
-                disabled={addPlayerMutation.isPending}
-                onPress={onSubmit}
-                style={({ pressed }) => [
-                  styles.primaryButton,
-                  (pressed || addPlayerMutation.isPending) && styles.dimmed,
-                ]}
-              >
-                <Text style={styles.primaryButtonText}>
-                  {addPlayerMutation.isPending ? "Tracking…" : "Track player"}
-                </Text>
-              </Pressable>
-            </View>
+              <Button disabled={addPlayerMutation.isPending} onPress={onSubmit}>
+                {addPlayerMutation.isPending ? "Tracking…" : "Track player"}
+              </Button>
+            </Card>
 
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Local tracked players</Text>
+            <View className="flex-row items-center justify-between">
+              <Text className="text-al-cream" variant="title">
+                Local tracked players
+              </Text>
               {trackedPlayersQuery.isFetching ? (
-                <ActivityIndicator color="#fbbf24" />
+                <ActivityIndicator color="#d5c08f" />
               ) : null}
             </View>
 
             {trackedPlayersQuery.error ? (
-              <Text style={styles.errorBanner}>
-                {trackedPlayersQuery.error.message}
-              </Text>
+              <Card className="border-al-error bg-al-error-bg" variant="cream">
+                <Text variant="error">{trackedPlayersQuery.error.message}</Text>
+              </Card>
             ) : null}
           </View>
         }
         ListEmptyComponent={
           trackedPlayersQuery.isLoading ? (
-            <Text style={styles.emptyCard}>Loading tracked players…</Text>
+            <Card variant="dark">
+              <Text className="text-al-cream">Loading tracked players…</Text>
+            </Card>
           ) : (
-            <Text style={styles.emptyCard}>
-              No players tracked locally yet.
-            </Text>
+            <Card variant="dark">
+              <Text className="text-al-cream">
+                No adventurers tracked in this notebook yet.
+              </Text>
+            </Card>
           )
         }
         renderItem={({ item }) => (
@@ -191,7 +186,7 @@ export default function HomeScreen() {
           />
         )}
       />
-    </SafeAreaView>
+    </Screen>
   );
 }
 
@@ -209,172 +204,25 @@ function TrackedPlayerCard({
   onRemove,
 }: TrackedPlayerCardProps) {
   return (
-    <View style={styles.playerCard}>
-      <View style={styles.playerCardContent}>
-        <View style={styles.playerInfo}>
-          <Text style={styles.playerName}>{player.normalizedUsername}</Text>
-          <Text style={styles.playerMeta}>Added as {player.displayName}</Text>
-          {isActive ? <Text style={styles.activeBadge}>Last added</Text> : null}
+    <Card className="gap-3" variant="cream">
+      <View className="flex-row items-start justify-between gap-3">
+        <View className="flex-1 gap-1.5">
+          <Text className="text-lg font-extrabold" variant="body">
+            {player.normalizedUsername}
+          </Text>
+          <Text variant="muted">Added as {player.displayName}</Text>
+          {isActive ? <Badge>Last added</Badge> : null}
         </View>
-        <Pressable
+        <Button
+          className="px-3 py-2"
           disabled={isRemoving}
           onPress={onRemove}
-          style={({ pressed }) => [
-            styles.removeButton,
-            (pressed || isRemoving) && styles.dimmed,
-          ]}
+          textClassName="text-sm"
+          variant="danger"
         >
-          <Text style={styles.removeButtonText}>Remove</Text>
-        </Pressable>
+          Remove
+        </Button>
       </View>
-    </View>
+    </Card>
   );
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: "#020617",
-  },
-  listContent: {
-    gap: 16,
-    paddingHorizontal: 20,
-    paddingVertical: 32,
-  },
-  headerStack: {
-    gap: 24,
-  },
-  titleStack: {
-    gap: 12,
-  },
-  eyebrow: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: "#fbbf24",
-    letterSpacing: 1.4,
-    textTransform: "uppercase",
-  },
-  title: {
-    fontSize: 36,
-    fontWeight: "800",
-    color: "#f8fafc",
-  },
-  subtitle: {
-    fontSize: 16,
-    lineHeight: 24,
-    color: "#cbd5e1",
-  },
-  card: {
-    gap: 16,
-    borderWidth: 1,
-    borderColor: "#1e293b",
-    borderRadius: 24,
-    backgroundColor: "#0f172a",
-    padding: 20,
-  },
-  fieldStack: {
-    gap: 8,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#e2e8f0",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#334155",
-    borderRadius: 16,
-    backgroundColor: "#020617",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
-    color: "#f8fafc",
-  },
-  errorText: {
-    fontSize: 14,
-    color: "#fca5a5",
-  },
-  primaryButton: {
-    alignItems: "center",
-    borderRadius: 16,
-    backgroundColor: "#fbbf24",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  primaryButtonText: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#020617",
-  },
-  dimmed: {
-    opacity: 0.6,
-  },
-  sectionHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#f8fafc",
-  },
-  errorBanner: {
-    borderRadius: 16,
-    backgroundColor: "#450a0a",
-    padding: 16,
-    color: "#fecaca",
-  },
-  emptyCard: {
-    borderRadius: 16,
-    backgroundColor: "#0f172a",
-    padding: 20,
-    color: "#cbd5e1",
-  },
-  playerCard: {
-    gap: 12,
-    borderWidth: 1,
-    borderColor: "#1e293b",
-    borderRadius: 24,
-    backgroundColor: "#0f172a",
-    padding: 20,
-  },
-  playerCardContent: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    gap: 12,
-  },
-  playerInfo: {
-    flex: 1,
-    gap: 4,
-  },
-  playerName: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#f8fafc",
-  },
-  playerMeta: {
-    fontSize: 14,
-    color: "#94a3b8",
-  },
-  activeBadge: {
-    fontSize: 12,
-    fontWeight: "700",
-    color: "#fcd34d",
-    letterSpacing: 1.2,
-    textTransform: "uppercase",
-  },
-  removeButton: {
-    borderWidth: 1,
-    borderColor: "#f87171",
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  removeButtonText: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: "#fca5a5",
-  },
-});

@@ -1,5 +1,25 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css";
-
 @import "nativewind/theme";
+
+@theme {
+  --color-al-bg: #14110d;
+  --color-al-card: #baa479;
+  --color-al-card-light: #d5c08f;
+  --color-al-ink: #17110a;
+  --color-al-cream: #f7e8be;
+  --color-al-muted: #6a5840;
+  --color-al-moss: #31583b;
+  --color-al-moss-light: #3f6a49;
+  --color-al-forest: #17291c;
+  --color-al-error: #7f1d1d;
+  --color-al-error-bg: #fee2c5;
+  --color-al-error-cream: #fff7ed;
+
+  --radius-al-sm: 6px;
+  --radius-al-md: 10px;
+  --radius-al-lg: 16px;
+
+  --font-display: Kalam_700Bold;
+}

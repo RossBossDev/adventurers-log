@@ -1,10 +1,14 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { type ReactNode, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { View } from "react-native";
 
+import { Card } from "../components/ui/card";
+import { Screen } from "../components/ui/screen";
+import { Text } from "../components/ui/text";
 import { db } from "../db/client";
 import migrations from "../db/migrations";
+import { useAppFonts } from "../theme/fonts";
 
 type AppProvidersProps = {
   children: ReactNode;
@@ -12,24 +16,33 @@ type AppProvidersProps = {
 
 export function AppProviders({ children }: AppProvidersProps) {
   const [queryClient] = useState(() => new QueryClient());
-  const { success, error } = useMigrations(db, migrations);
+  const { success, error: migrationError } = useMigrations(db, migrations);
+  const [fontsLoaded, fontError] = useAppFonts();
+  const setupError = migrationError ?? fontError;
 
-  if (error) {
+  if (setupError) {
     return (
-      <View style={styles.centeredScreen}>
-        <Text style={styles.errorTitle}>Could not prepare local data.</Text>
-        <Text style={styles.errorMessage}>{error.message}</Text>
-      </View>
+      <Screen className="justify-center px-6">
+        <Card className="gap-3" variant="cream">
+          <Text variant="title">Could not prepare your logbook.</Text>
+          <Text variant="error">{setupError.message}</Text>
+        </Card>
+      </Screen>
     );
   }
 
-  if (!success) {
+  if (!success || !fontsLoaded) {
     return (
-      <View style={styles.centeredScreen}>
-        <Text style={styles.loadingTitle}>
-          Preparing Adventurers&apos; Log…
-        </Text>
-      </View>
+      <Screen className="justify-center px-6">
+        <View className="gap-3">
+          <Text className="text-center" variant="display">
+            Adventurers&apos; Log
+          </Text>
+          <Text className="text-center" variant="subtitle">
+            Preparing your notebook…
+          </Text>
+        </View>
+      </Screen>
     );
   }
 
@@ -37,27 +50,3 @@ export function AppProviders({ children }: AppProvidersProps) {
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  centeredScreen: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#020617",
-    paddingHorizontal: 24,
-  },
-  errorTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#fca5a5",
-  },
-  errorMessage: {
-    marginTop: 8,
-    fontSize: 16,
-    color: "#cbd5e1",
-  },
-  loadingTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#f1f5f9",
-  },
-});
