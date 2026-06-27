@@ -9,10 +9,11 @@ type ScreenProps = SafeAreaViewProps & {
   className?: string;
 };
 
-export function Screen({ className, style, ...props }: ScreenProps) {
+export function Screen({ className, edges, style, ...props }: ScreenProps) {
   return (
     <SafeAreaView
       className={cn("flex-1 bg-al-bg", className)}
+      edges={edges ?? ["top", "left", "right"]}
       style={[{ backgroundColor: "#14110d" }, style]}
       {...props}
     />
