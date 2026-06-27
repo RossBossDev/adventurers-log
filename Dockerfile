@@ -31,7 +31,7 @@ RUN addgroup --system --gid 1001 nodejs \
 COPY pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY package.json apps/backend/package.json apps/web/package.json apps/docs/package.json ./
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
-    pnpm fetch --prod \
+    pnpm fetch \
   && pnpm install --frozen-lockfile --prod --ignore-scripts --offline \
   && pnpm store prune
 
