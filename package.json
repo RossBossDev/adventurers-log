@@ -24,8 +24,7 @@
     "db:types": "pnpm --filter backend db:types",
     "docs:dev": "pnpm --filter docs dev",
     "docs:build": "pnpm --filter docs build",
-    "docs:preview": "pnpm --filter docs preview",
-    "prepare": "lefthook install"
+    "docs:preview": "pnpm --filter docs preview"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.0",
