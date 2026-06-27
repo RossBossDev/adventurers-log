@@ -25,6 +25,7 @@ module.exports = {
         (plugin) => plugin !== "@react-native-google-signin/google-signin",
       ),
       googleSignInPlugin,
+      "expo-secure-store",
     ],
   },
 };

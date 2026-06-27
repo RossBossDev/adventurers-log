@@ -60,6 +60,18 @@
             ReferencedContainer = "container:AdventurersLog.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "API_BASE_URL"
+            value = "http://192.168.1.173:3000"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "GOOGLE_IOS_CLIENT_ID"
+            value = "87345523427-q2t718rofui0iupi8vsilh3hfkm973ie.apps.googleusercontent.com"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

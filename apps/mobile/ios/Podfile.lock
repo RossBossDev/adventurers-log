@@ -42,6 +42,8 @@ PODS:
     - ExpoModulesCore
     - GoogleSignIn (~> 9.0)
     - React-Core
+  - ExpoAppleAuthentication (8.0.8):
+    - ExpoModulesCore
   - ExpoAsset (12.0.13):
     - ExpoModulesCore
   - ExpoFileSystem (19.0.23):
@@ -87,6 +89,8 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
+  - ExpoSecureStore (15.0.8):
+    - ExpoModulesCore
   - ExpoSplashScreen (31.0.13):
     - ExpoModulesCore
   - ExpoSQLite (16.0.10):
@@ -2123,6 +2127,7 @@ DEPENDENCIES:
   - "EXConstants (from `../../../node_modules/.pnpm/expo-constants@18.0.13_expo@54.0.35_react-native@0.81.5_@babel+core@7.29.7_@react-nativ_98533327e7b9fa60d5ea98478d56fc97/node_modules/expo-constants/ios`)"
   - "Expo (from `../../../node_modules/.pnpm/expo@54.0.35_@babel+core@7.29.7_@expo+dom-webview@56.0.5_@expo+metro-runtime@6.1.2_expo_348bc9e12a6943cf4e0c3b13d87b36a6/node_modules/expo`)"
   - "ExpoAdapterGoogleSignIn (from `../../../node_modules/.pnpm/@react-native-google-signin+google-signin@16.1.2_expo@54.0.35_react-native@0.81.5_@babe_644e1146d215f940a357656473819f92/node_modules/@react-native-google-signin/google-signin/expo/ios`)"
+  - "ExpoAppleAuthentication (from `../../../node_modules/.pnpm/expo-apple-authentication@8.0.8_expo@54.0.35_react-native@0.81.5_@babel+core@7.29.7_@re_bc3e841379a65a288adaf07cb78721fa/node_modules/expo-apple-authentication/ios`)"
   - "ExpoAsset (from `../../../node_modules/.pnpm/expo-asset@12.0.13_expo@54.0.35_react-native@0.81.5_@babel+core@7.29.7_@react-native+me_6eeef764439539462b048e36f98200d8/node_modules/expo-asset/ios`)"
   - "ExpoFileSystem (from `../../../node_modules/.pnpm/expo-file-system@19.0.23_expo@54.0.35_react-native@0.81.5_@babel+core@7.29.7_@react-nat_83d9cb3c74523c0575fa9058f4667905/node_modules/expo-file-system/ios`)"
   - "ExpoFont (from `../../../node_modules/.pnpm/expo-font@14.0.12_expo@54.0.35_react-native@0.81.5_@babel+core@7.29.7_@react-native+met_43c013e830be742fdbfd63579473ede2/node_modules/expo-font/ios`)"
@@ -2132,6 +2137,7 @@ DEPENDENCIES:
   - "ExpoKeepAwake (from `../../../node_modules/.pnpm/expo-keep-awake@15.0.8_expo@54.0.35_react@19.1.0/node_modules/expo-keep-awake/ios`)"
   - "ExpoLinking (from `../../../node_modules/.pnpm/expo-linking@8.0.12_expo@54.0.35_react-native@0.81.5_@babel+core@7.29.7_@react-native+m_49e7471a54eb6fd79a3995f38b22d686/node_modules/expo-linking/ios`)"
   - "ExpoModulesCore (from `../../../node_modules/.pnpm/expo-modules-core@3.0.30_react-native@0.81.5_@babel+core@7.29.7_@react-native+metro-con_96cd82545b59c9435a32223b86816782/node_modules/expo-modules-core`)"
+  - "ExpoSecureStore (from `../../../node_modules/.pnpm/expo-secure-store@15.0.8_expo@54.0.35/node_modules/expo-secure-store/ios`)"
   - "ExpoSplashScreen (from `../../../node_modules/.pnpm/expo-splash-screen@31.0.13_expo@54.0.35_typescript@5.9.3/node_modules/expo-splash-screen/ios`)"
   - "ExpoSQLite (from `../../../node_modules/.pnpm/expo-sqlite@16.0.10_expo@54.0.35_react-native@0.81.5_@babel+core@7.29.7_@react-native+m_7a8cacf35fdd60ad1298538ce7d6fae6/node_modules/expo-sqlite/ios`)"
   - "ExpoSymbols (from `../../../node_modules/.pnpm/expo-symbols@1.0.8_expo@54.0.35_react-native@0.81.5_@babel+core@7.29.7_@react-native+me_54007f5c9887497a9ddfd40c42f046d4/node_modules/expo-symbols/ios`)"
@@ -2240,6 +2246,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/.pnpm/expo@54.0.35_@babel+core@7.29.7_@expo+dom-webview@56.0.5_@expo+metro-runtime@6.1.2_expo_348bc9e12a6943cf4e0c3b13d87b36a6/node_modules/expo"
   ExpoAdapterGoogleSignIn:
     :path: "../../../node_modules/.pnpm/@react-native-google-signin+google-signin@16.1.2_expo@54.0.35_react-native@0.81.5_@babe_644e1146d215f940a357656473819f92/node_modules/@react-native-google-signin/google-signin/expo/ios"
+  ExpoAppleAuthentication:
+    :path: "../../../node_modules/.pnpm/expo-apple-authentication@8.0.8_expo@54.0.35_react-native@0.81.5_@babel+core@7.29.7_@re_bc3e841379a65a288adaf07cb78721fa/node_modules/expo-apple-authentication/ios"
   ExpoAsset:
     :path: "../../../node_modules/.pnpm/expo-asset@12.0.13_expo@54.0.35_react-native@0.81.5_@babel+core@7.29.7_@react-native+me_6eeef764439539462b048e36f98200d8/node_modules/expo-asset/ios"
   ExpoFileSystem:
@@ -2258,6 +2266,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/.pnpm/expo-linking@8.0.12_expo@54.0.35_react-native@0.81.5_@babel+core@7.29.7_@react-native+m_49e7471a54eb6fd79a3995f38b22d686/node_modules/expo-linking/ios"
   ExpoModulesCore:
     :path: "../../../node_modules/.pnpm/expo-modules-core@3.0.30_react-native@0.81.5_@babel+core@7.29.7_@react-native+metro-con_96cd82545b59c9435a32223b86816782/node_modules/expo-modules-core"
+  ExpoSecureStore:
+    :path: "../../../node_modules/.pnpm/expo-secure-store@15.0.8_expo@54.0.35/node_modules/expo-secure-store/ios"
   ExpoSplashScreen:
     :path: "../../../node_modules/.pnpm/expo-splash-screen@31.0.13_expo@54.0.35_typescript@5.9.3/node_modules/expo-splash-screen/ios"
   ExpoSQLite:
@@ -2422,6 +2432,7 @@ SPEC CHECKSUMS:
   EXConstants: fce59a631a06c4151602843667f7cfe35f81e271
   Expo: edf5879dd9f83d2aa5b05d012412c810bc182ac1
   ExpoAdapterGoogleSignIn: ab4d9fc38cb91077a4138d178395525ec65d0c2e
+  ExpoAppleAuthentication: 9413ae9a5e631a424cc04c1b13b0694dbab7d594
   ExpoAsset: 9e5a7c9c0a9fb83ad5b2bb365141f2bd7f289b66
   ExpoFileSystem: a8e7fb1e958471764fb48d281cf9fa81a9e4d77c
   ExpoFont: dfb7c572372b610da45b41e3b436321fd6a97215
@@ -2431,6 +2442,7 @@ SPEC CHECKSUMS:
   ExpoKeepAwake: 55f75eca6499bb9e4231ebad6f3e9cb8f99c0296
   ExpoLinking: 2ef632ad5013e3f1568fae9408d56ab9af5efc55
   ExpoModulesCore: 9e6a5514828e7dd5ded9e99d33557be2d284e660
+  ExpoSecureStore: d32f751874a2ceb5aaeebeb3578e165c1ba2b24a
   ExpoSplashScreen: bc3cffefca2716e5f22350ca109badd7e50ec14d
   ExpoSQLite: 7eedbe476870a5f18d6b89c817c4ac6f299830ad
   ExpoSymbols: 349ee2b4d7d5ff3ea8436467914f8a67635aa354

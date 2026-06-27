@@ -355,6 +355,7 @@
 				CODE_SIGN_ENTITLEMENTS = AdventurersLog/AdventurersLog.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = W3673HWBNU;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = W3673HWBNU;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -375,6 +376,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "dev.rossboss.osrs-log";
 				PRODUCT_NAME = AdventurersLog;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "OSRS Log";
 				SWIFT_OBJC_BRIDGING_HEADER = "AdventurersLog/AdventurersLog-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -392,7 +394,7 @@
 				CODE_SIGN_ENTITLEMENTS = AdventurersLog/AdventurersLog.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = W3673HWBNU;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = W3673HWBNU;
 				INFOPLIST_FILE = AdventurersLog/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
