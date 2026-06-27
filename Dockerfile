@@ -9,10 +9,13 @@ WORKDIR /app
 
 FROM base AS builder
 ENV CI=true
-COPY pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
     pnpm fetch
-COPY package.json apps/backend/package.json apps/web/package.json apps/docs/package.json ./
+COPY apps/backend/package.json apps/backend/package.json
+COPY apps/docs/package.json apps/docs/package.json
+COPY apps/mobile/package.json apps/mobile/package.json
+COPY apps/web/package.json apps/web/package.json
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
     pnpm install --frozen-lockfile --ignore-scripts --offline \
   && pnpm rebuild esbuild sharp msgpackr-extract unrs-resolver
@@ -24,16 +27,19 @@ RUN pnpm --filter web build
 FROM base AS runner
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV CI=true
 
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 nestjs
 
-COPY pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
-COPY package.json apps/backend/package.json apps/web/package.json apps/docs/package.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY apps/backend/package.json apps/backend/package.json
+COPY apps/docs/package.json apps/docs/package.json
+COPY apps/mobile/package.json apps/mobile/package.json
+COPY apps/web/package.json apps/web/package.json
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
     pnpm fetch \
-  && pnpm install --frozen-lockfile --prod --ignore-scripts --offline \
-  && pnpm store prune
+  && pnpm install --frozen-lockfile --prod --ignore-scripts --offline
 
 COPY --from=builder --chown=nestjs:nodejs /app/apps/backend/dist apps/backend/dist
 COPY --from=builder --chown=nestjs:nodejs /app/apps/web/.next apps/web/.next
