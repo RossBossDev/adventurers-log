@@ -1,6 +1,8 @@
 import { defineConfig } from "kysely-ctl";
 import { Pool } from "pg";
 
+const isProd = process.env.NODE_ENV === "production";
+
 export default defineConfig({
   dialect: "pg",
   dialectConfig: {
@@ -11,6 +13,9 @@ export default defineConfig({
     }),
   },
   migrations: {
-    migrationFolder: "src/database/migrations",
+    migrationFolder: isProd
+      ? "dist/src/database/migrations"
+      : "src/database/migrations",
+    allowJS: isProd,
   },
 });
