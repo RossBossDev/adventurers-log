@@ -8,9 +8,6 @@ import type { AppConfig } from "../config/app.config";
     PinoLoggerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService<AppConfig, true>) => {
-        const isProduction =
-          configService.get("NODE_ENV", { infer: true }) === "production";
-
         return {
           pinoHttp: {
             level: configService.get("LOG_LEVEL", { infer: true }),
@@ -19,12 +16,10 @@ import type { AppConfig } from "../config/app.config";
               "req.headers.cookie",
               "res.headers.set-cookie",
             ],
-            transport: isProduction
-              ? undefined
-              : {
-                  target: "pino-pretty",
-                  options: { colorize: true, singleLine: true },
-                },
+            transport: {
+              target: "pino-pretty",
+              options: { colorize: true, singleLine: true },
+            },
           },
         };
       },
