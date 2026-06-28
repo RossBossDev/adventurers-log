@@ -10,7 +10,7 @@ import { displayFontFamily } from "../../theme/fonts";
 const textVariants = cva("text-al-ink", {
   variants: {
     variant: {
-      display: "text-5xl leading-[56px] text-al-cream",
+      display: "text-3xl leading-[56px] text-al-cream",
       title: "text-2xl font-extrabold text-al-ink",
       subtitle: "text-base leading-6 text-al-cream/85",
       label: "text-sm font-bold uppercase tracking-[1.2px] text-al-muted",

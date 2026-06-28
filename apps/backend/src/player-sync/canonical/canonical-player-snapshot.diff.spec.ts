@@ -80,6 +80,34 @@ describe("diffCanonicalPlayerSnapshots", () => {
     ]);
   });
 
+  it("creates no collection-log events for the first snapshot", () => {
+    expect(diff(null, snapshot({}, undefined, [4151]))).toEqual([]);
+  });
+
+  it("creates a collection-log event when an item first appears", () => {
+    expect(diff(snapshot({}), snapshot({}, undefined, [4151]))).toEqual([
+      expect.objectContaining({
+        eventType: "new_log_item",
+        subjectType: "item",
+        subjectKey: "4151",
+        fromValue: null,
+        toValue: 1,
+        milestoneValue: null,
+        idempotencyKey: "tracked-player:tracked-player-id:new-log-item:4151",
+      }),
+    ]);
+  });
+
+  it("creates no collection-log event when an item was already present", () => {
+    expect(
+      diff(snapshot({}, undefined, [4151]), snapshot({}, undefined, [4151])),
+    ).toEqual([]);
+  });
+
+  it("creates no collection-log event when an item disappears", () => {
+    expect(diff(snapshot({}, undefined, [4151]), snapshot({}))).toEqual([]);
+  });
+
   it("creates no total-level event without crossing a 25-level boundary", () => {
     expect(diff(snapshot({}, 2001), snapshot({}, 2024))).toEqual([]);
   });
@@ -88,13 +116,16 @@ describe("diffCanonicalPlayerSnapshots", () => {
 function snapshot(
   skills: Record<string, number>,
   overallLevel?: number,
+  itemIds: number[] = [],
 ): CanonicalPlayerSnapshot {
   return {
     overall: overallLevel === undefined ? undefined : { level: overallLevel },
     skills: Object.fromEntries(
       Object.entries(skills).map(([skill, level]) => [skill, { level }]),
     ),
-    itemsUnlocked: {},
+    itemsUnlocked: Object.fromEntries(
+      itemIds.map((id) => [id.toString(), { id, acquiredAt: null }]),
+    ),
     bosses: {},
   };
 }

@@ -3,6 +3,7 @@ import { AuthModule } from "@thallesp/nestjs-better-auth";
 import { authModuleAsyncConfig } from "./auth/auth.config";
 import { ConfigModule } from "./config/config.module";
 import { DatabaseModule } from "./database/database.module";
+import { FeedModule } from "./feed/feed.module";
 import { HealthModule } from "./health/health.module";
 import { LoggerModule } from "./logger/logger.module";
 import { PlayerSyncModule } from "./player-sync/player-sync.module";
@@ -17,6 +18,7 @@ import { TrackedPlayersModule } from "./tracked-players/tracked-players.module";
     AuthModule.forRootAsync(authModuleAsyncConfig),
     QueueModule,
     HealthModule,
+    FeedModule,
     TrackedPlayersModule,
     PlayerSyncModule,
   ],

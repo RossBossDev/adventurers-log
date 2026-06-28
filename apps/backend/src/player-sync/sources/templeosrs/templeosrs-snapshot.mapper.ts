@@ -10,36 +10,6 @@ export class InvalidTempleOsrsSnapshotError extends Error {
   }
 }
 
-interface TempleOsrsPayload {
-  data: {
-    player: string;
-    player_name_with_capitalization: string | null;
-    game_mode: number;
-    last_checked: string;
-    last_changed: string;
-    items: Record<
-      string,
-      {
-        count: number;
-        item_date: number | null;
-        missing_hours: number;
-      }
-    >;
-    socials: [
-      {
-        link: string;
-        icon: string;
-      },
-    ];
-    killcounts: Record<
-      string,
-      {
-        kc: number;
-      }
-    >;
-  };
-}
-
 export function normalizeTempleOsrsSnapshot(
   payload: unknown,
 ): NormalizedTempleOsrsSnapshot {
