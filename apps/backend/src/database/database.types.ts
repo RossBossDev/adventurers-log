@@ -69,6 +69,9 @@ export interface PlayerSnapshots {
 export interface ProgressEvents {
   created_at: Generated<Timestamp>;
   current_player_snapshot_id: string;
+  display_accent_label: string;
+  display_body: string | null;
+  display_title: string;
   event_type: string;
   from_value: number | null;
   id: Generated<string>;
@@ -78,6 +81,7 @@ export interface ProgressEvents {
   occurred_at: Timestamp;
   previous_player_snapshot_id: string | null;
   subject_key: string;
+  subject_label: string;
   subject_type: string;
   to_value: number;
   tracked_player_id: string;

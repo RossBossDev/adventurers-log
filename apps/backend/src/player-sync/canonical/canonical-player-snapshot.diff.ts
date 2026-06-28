@@ -1,4 +1,5 @@
 import {
+  NEW_LOG_ITEM_EVENT,
   type ProgressEventCandidate,
   SKILL_LEVEL_UP_EVENT,
   TOTAL_LEVEL_MILESTONE_EVENT,
@@ -71,6 +72,27 @@ export function diffCanonicalPlayerSnapshots({
         metadata: {},
       });
     }
+  }
+
+  for (const itemId of Object.keys(current.itemsUnlocked)) {
+    if (previous.itemsUnlocked[itemId]) {
+      continue;
+    }
+
+    events.push({
+      trackedPlayerId,
+      previousPlayerSnapshotId: previousSnapshotId,
+      currentPlayerSnapshotId: currentSnapshotId,
+      eventType: NEW_LOG_ITEM_EVENT,
+      subjectType: "item",
+      subjectKey: itemId,
+      fromValue: null,
+      toValue: 1,
+      milestoneValue: null,
+      occurredAt,
+      idempotencyKey: `tracked-player:${trackedPlayerId}:new-log-item:${itemId}`,
+      metadata: {},
+    });
   }
 
   return events;

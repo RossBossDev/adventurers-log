@@ -35,7 +35,7 @@ const addAccountSchema = z.object({
 
 type AddAccountForm = z.input<typeof addAccountSchema>;
 
-export default function FollowAccountScreen() {
+export default function FollowedAccountsScreen() {
   const queryClient = useQueryClient();
   const activeTrackedPlayerId = useTrackedPlayerStore(
     (state) => state.activeTrackedPlayerId,
@@ -113,9 +113,9 @@ export default function FollowAccountScreen() {
           <View className="gap-6">
             <View className="gap-3">
               <Text className="text-al-card-light" variant="label">
-                Feed setup
+                Add OSRS account
               </Text>
-              <Text variant="display">Follow an OSRS account</Text>
+              <Text variant="display">Followed accounts</Text>
               <Text variant="subtitle">
                 Validate an OSRS Account with the backend and save it locally on
                 this device. This is separate from claiming My Accounts for an
@@ -165,7 +165,7 @@ export default function FollowAccountScreen() {
 
             <View className="flex-row items-center justify-between">
               <Text className="text-al-cream" variant="title">
-                Followed OSRS accounts
+                Following
               </Text>
               {trackedAccountsQuery.isFetching ? (
                 <ActivityIndicator color="#d5c08f" />

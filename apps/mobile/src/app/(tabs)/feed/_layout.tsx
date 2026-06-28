@@ -9,7 +9,7 @@ export default function FeedLayout() {
       }}
     >
       <Stack.Screen name="index" />
-      <Stack.Screen name="follow-account" />
+      <Stack.Screen name="followed-accounts" />
       <Stack.Screen name="events/[eventId]" />
       <Stack.Screen name="accounts/[accountId]" />
     </Stack>
